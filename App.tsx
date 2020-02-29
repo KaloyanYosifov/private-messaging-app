@@ -16,6 +16,8 @@
 import React from 'react';
 import 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';
+import { dark as theme, mapping } from '@eva-design/eva';
+import { ApplicationProvider } from '@ui-kitten/components';
 
 /**
  * Internal dependencies.
@@ -24,7 +26,9 @@ import Router from '@/router';
 
 const App = (): React.ReactFragment => (
     <NavigationContainer>
-        <Router />
+        <ApplicationProvider mapping={mapping} theme={theme}>
+            <Router />
+        </ApplicationProvider>
     </NavigationContainer>
 );
 

@@ -7,14 +7,14 @@ import { createStackNavigator } from '@react-navigation/stack';
 /**
  * Internal dependencies.
  */
-import AuthRouter from '@/features/auth/router';
+import Login from '@/features/auth/components/login';
 
 const Stack = createStackNavigator();
 
 function Router() {
     return (
         <Stack.Navigator headerMode={'none'}>
-            <Stack.Screen name="AuthRouter" component={AuthRouter} />
+            <Stack.Screen name="Home" component={Login} />
         </Stack.Navigator>
     );
 }

@@ -1,6 +1,6 @@
 /**
  * Internal dependencies.
  */
-import { StateModel } from '@/store/authentication/models/state.model';
+import { ApplicationState } from '@/store';
 
-export const isLoggedIn = (state: StateModel) => state.isLoggedIn;
+export const isLoggedIn = (state: ApplicationState) => state.authentication.isLoggedIn;

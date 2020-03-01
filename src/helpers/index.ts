@@ -1,9 +1,14 @@
-export const createReducer = <S = any, A = any>(initalState: S, reducers: any) => {
+/**
+ * External dependencies.
+ */
+import { Action } from 'redux';
+
+export const createReducer = <S = any, A extends Action>(initalState: S, reducers: any) => {
     return (state: S = initalState, action: A) => {
-        if (!Object.prototype.hasOwnProperty.call(reducers, action)) {
+        if (!Object.prototype.hasOwnProperty.call(reducers, action.type)) {
             return state;
         }
 
-        return reducers[action](state, action);
+        return reducers[action.type](state, action);
     };
 };

@@ -5,14 +5,14 @@
 /**
  * Internal dependencies.
  */
-import { LOG_IN, LOG_OUT } from '../constants';
+import Types from '@/store/authentication/types';
 
-interface LogInAction {
-    type: typeof LOG_IN,
+export interface LogInAction {
+    type: Types.LOG_IN,
 }
 
-interface LogOutAction {
-    type: typeof LOG_OUT,
+export interface LogOutAction {
+    type: Types.LOG_OUT,
 }
 
 type ActionsModel = LogInAction | LogOutAction;

@@ -1,7 +1,7 @@
 /**
  * Internal dependencies.
  */
-import { LOG_IN, LOG_OUT } from '@/store/authentication/constants';
+import Types from '@/store/authentication/types';
 
 import { createReducer } from '@/helpers';
 import { StateModel } from './models/state.model';
@@ -12,8 +12,8 @@ const initialState: StateModel = {
 };
 
 const reducers = {
-    [LOG_IN]: (state: StateModel) => ({ ...state, isLoggedIn: true }),
-    [LOG_OUT]: (state: StateModel) => ({ ...state, isLoggedIn: true }),
+    [Types.LOG_IN]: (state: StateModel) => ({ ...state, isLoggedIn: true }),
+    [Types.LOG_OUT]: (state: StateModel) => ({ ...state, isLoggedIn: false }),
 };
 
 export default createReducer<StateModel, ActionsModel>(initialState, reducers);

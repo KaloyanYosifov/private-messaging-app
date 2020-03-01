@@ -38,7 +38,7 @@ const Register = ({ navigation }: RegisterProps): React.ReactFragment => {
                             textContentType="name"
                             style={styles.formInput}
                             value={name}
-                            onChange={setName}
+                            onChangeText={setName}
                         />
 
                         <Input
@@ -47,7 +47,7 @@ const Register = ({ navigation }: RegisterProps): React.ReactFragment => {
                             textContentType="emailAddress"
                             style={styles.formInput}
                             value={email}
-                            onChange={setEmail}
+                            onChangeText={setEmail}
                         />
 
                         <Input
@@ -57,7 +57,7 @@ const Register = ({ navigation }: RegisterProps): React.ReactFragment => {
                             secureTextEntry={true}
                             style={styles.formInput}
                             value={password}
-                            onChange={setPassword}
+                            onChangeText={setPassword}
                         />
 
                         <Input
@@ -67,7 +67,7 @@ const Register = ({ navigation }: RegisterProps): React.ReactFragment => {
                             secureTextEntry={true}
                             style={styles.lastFormInput}
                             value={confirmationPassword}
-                            onChange={setConfirmationPassword}
+                            onChangeText={setConfirmationPassword}
                         />
 
                         <Button style={styles.button} size="medium">Register</Button>

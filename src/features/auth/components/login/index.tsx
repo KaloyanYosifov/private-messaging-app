@@ -36,7 +36,7 @@ const Login = ({ navigation }: LoginProps): React.ReactFragment => {
                             textContentType="emailAddress"
                             style={styles.formInput}
                             value={email}
-                            onChange={setEmail}
+                            onChangeText={setEmail}
                         />
 
                         <Input
@@ -46,7 +46,7 @@ const Login = ({ navigation }: LoginProps): React.ReactFragment => {
                             secureTextEntry={true}
                             style={styles.lastFormInput}
                             value={password}
-                            onChange={setPassword}
+                            onChangeText={setPassword}
                         />
 
                         <Button style={styles.button} size="medium">Login</Button>

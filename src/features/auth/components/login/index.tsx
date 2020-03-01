@@ -20,12 +20,6 @@ const Login = (): React.ReactFragment => (
         <Text style={styles.text} category="h1">
             Welcome to UI Kitten 😻
         </Text>
-        <Text style={styles.text} category="s1">
-            Start with editing App.js to configure your App
-        </Text>
-        <Text style={styles.text} appearance="hint">
-            For example, try changing theme to Dark by simply changing an import
-        </Text>
     </Layout>
 );
 

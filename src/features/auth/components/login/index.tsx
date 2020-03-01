@@ -14,6 +14,7 @@ import {
  * Internal dependencies.
  */
 import styles from './styles';
+import HttpClient from '@/client';
 
 interface LoginProps {
     navigation: any

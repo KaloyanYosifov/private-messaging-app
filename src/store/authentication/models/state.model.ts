@@ -1,3 +1,4 @@
 export interface StateModel {
-    isLoggedIn: boolean
-};
+    isLoggedIn: boolean,
+    authToken: string | null
+}

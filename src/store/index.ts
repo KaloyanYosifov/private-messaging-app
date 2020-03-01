@@ -1,27 +1,30 @@
 /**
  * External dependencies.
  */
-import { createStore, applyMiddleware, combineReducers } from 'redux';
 import thunk from 'redux-thunk';
+import { createStore, applyMiddleware, combineReducers } from 'redux';
+import { persistStore, persistReducer } from 'redux-persist';
 
 /**
  * Internal dependencies.
  */
-import authentication from './authentication/reducers';
+import authentication, { persistConfig } from './authentication/reducers';
 import { StateModel as AuthenticationStateModel } from '@/store/authentication/models/state.model';
-
-const reducers = combineReducers({
-    authentication,
-});
 
 interface ApplicationState {
     authentication: AuthenticationStateModel
 }
+
+const reducers = combineReducers({
+    authentication: persistReducer(persistConfig, authentication),
+});
 
 const store = createStore(
     reducers,
     applyMiddleware(thunk),
 );
 
-export { ApplicationState };
+const persistor = persistStore(store);
+
+export { ApplicationState, persistor };
 export default store;

@@ -15,6 +15,11 @@ export interface LogOutAction {
     type: Types.LOG_OUT,
 }
 
-type ActionsModel = LogInAction | LogOutAction;
+export interface SetAuthTokenAction {
+    type: Types.SET_AUTH_TOKEN
+    payload: string | null
+}
+
+type ActionsModel = LogInAction | LogOutAction | SetAuthTokenAction;
 
 export default ActionsModel;

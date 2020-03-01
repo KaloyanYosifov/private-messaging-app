@@ -3,9 +3,6 @@
  */
 import React from 'react';
 import {
-    SafeAreaView,
-} from 'react-native';
-import {
     Layout,
     Text,
 } from '@ui-kitten/components';

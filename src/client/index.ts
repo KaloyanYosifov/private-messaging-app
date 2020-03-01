@@ -2,7 +2,7 @@
  * External dependencies.
  */
 import axios, { AxiosInstance, Method } from 'axios';
-import { APP_URL } from 'react-native-dotenv';
+import { APP_BASE_URL, APP_API_ENDPOINT } from 'react-native-dotenv';
 
 /**
  * Internal dependencies.
@@ -15,7 +15,14 @@ class HttpClient {
 
     constructor() {
         this.client = axios.create({
-            baseURL: APP_URL,
+            baseURL: APP_BASE_URL + APP_API_ENDPOINT,
+        });
+    }
+
+    login(email: string, password: string) {
+        return axios.post(APP_BASE_URL + '/oauth/token', {
+            username: email,
+            password,
         });
     }
 

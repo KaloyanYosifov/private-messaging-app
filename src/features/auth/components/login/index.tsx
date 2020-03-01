@@ -2,7 +2,7 @@
  * External dependencies.
  */
 import React, { useState } from 'react';
-import { KeyboardAvoidingView } from 'react-native';
+import { KeyboardAvoidingView, TouchableOpacity } from 'react-native';
 import {
     Text,
     Input,
@@ -15,7 +15,11 @@ import {
  */
 import styles from './styles';
 
-const Login = (): React.ReactFragment => {
+interface LoginProps {
+    navigation: any
+}
+
+const Login = ({ navigation }: LoginProps): React.ReactFragment => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
@@ -45,7 +49,11 @@ const Login = (): React.ReactFragment => {
                             onChange={setPassword}
                         />
 
-                        <Button size="medium">Login</Button>
+                        <Button style={styles.button} size="medium">Login</Button>
+
+                        <TouchableOpacity onPress={() => navigation.navigate('Register')}>
+                            <Text style={styles.linkText}>Don't have an account?</Text>
+                        </TouchableOpacity>
                     </Layout>
                 </Layout>
             </KeyboardAvoidingView>

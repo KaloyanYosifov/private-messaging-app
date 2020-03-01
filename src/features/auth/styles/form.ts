@@ -26,6 +26,12 @@ const styles = StyleSheet.create({
     lastFormInput: {
         marginBottom: verticalScale(20),
     },
+    button: {
+        marginBottom: verticalScale(10),
+    },
+    linkText: {
+        textAlign: 'center',
+    },
 });
 
 export default styles;

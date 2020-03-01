@@ -2,7 +2,7 @@
  * External dependencies.
  */
 import React, { useState } from 'react';
-import { KeyboardAvoidingView } from 'react-native';
+import { KeyboardAvoidingView, TouchableOpacity } from 'react-native';
 import {
     Text,
     Input,
@@ -15,9 +15,15 @@ import {
  */
 import styles from './styles';
 
-const Login = (): React.ReactFragment => {
+interface RegisterProps {
+    navigation: any
+}
+
+const Register = ({ navigation }: RegisterProps): React.ReactFragment => {
+    const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [confirmationPassword, setConfirmationPassword] = useState('');
 
     return (
         <Layout style={styles.container}>
@@ -26,6 +32,15 @@ const Login = (): React.ReactFragment => {
                     <Text category="h1" style={styles.heading}>Register</Text>
 
                     <Layout style={styles.formBody}>
+                        <Input
+                            placeholder="Enter name"
+                            autoCompleteType="name"
+                            textContentType="name"
+                            style={styles.formInput}
+                            value={name}
+                            onChange={setName}
+                        />
+
                         <Input
                             placeholder="Enter email"
                             autoCompleteType="email"
@@ -40,7 +55,7 @@ const Login = (): React.ReactFragment => {
                             autoCompleteType="password"
                             textContentType="password"
                             secureTextEntry={true}
-                            style={styles.lastFormInput}
+                            style={styles.formInput}
                             value={password}
                             onChange={setPassword}
                         />
@@ -51,11 +66,15 @@ const Login = (): React.ReactFragment => {
                             textContentType="password"
                             secureTextEntry={true}
                             style={styles.lastFormInput}
-                            value={password}
-                            onChange={setPassword}
+                            value={confirmationPassword}
+                            onChange={setConfirmationPassword}
                         />
 
-                        <Button size="medium">Register</Button>
+                        <Button style={styles.button} size="medium">Register</Button>
+
+                        <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+                            <Text style={styles.linkText}>Already have an account?</Text>
+                        </TouchableOpacity>
                     </Layout>
                 </Layout>
             </KeyboardAvoidingView>
@@ -63,4 +82,4 @@ const Login = (): React.ReactFragment => {
     );
 };
 
-export default Login;
+export default Register;

@@ -21,7 +21,7 @@ const Login = (): React.ReactFragment => {
 
     return (
         <Layout style={styles.container}>
-            <KeyboardAvoidingView style={{ flex: 1 }}>
+            <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
                 <Layout style={styles.formContainer}>
                     <Text category="h1" style={styles.heading}>Log In</Text>
 

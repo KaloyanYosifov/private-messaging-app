@@ -1,16 +1,27 @@
+/**
+ * External dependencies.
+ */
+import { verticalScale, moderateScale } from 'react-native-size-matters';
 import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
     },
-    text: {
+    heading: {
         textAlign: 'center',
     },
-    likeButton: {
-        marginVertical: 16,
+    formContainer: {
+        flex: 1,
+        marginTop: verticalScale(200),
+        paddingLeft: moderateScale(30, .5),
+        paddingRight: moderateScale(30, .5),
+    },
+    formBody: {
+        marginTop: verticalScale(30),
+    },
+    formInput: {
+        marginBottom: verticalScale(10),
     },
 });
 

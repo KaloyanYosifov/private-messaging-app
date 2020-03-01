@@ -1,37 +1,49 @@
 /**
  * External dependencies.
  */
-import React from 'react';
+import React, { useState } from 'react';
 import {
-    Layout,
     Text,
+    Input,
+    Layout,
 } from '@ui-kitten/components';
-import { connect } from 'react-redux';
 
 /**
  * Internal dependencies.
  */
 import styles from './styles';
 
-import { ApplicationState } from '@/store';
-import { isLoggedIn } from '@/store/authentication/getters';
+const Login = (): React.ReactFragment => {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
 
-const Login = ({ isLoggedIn }): React.ReactFragment => {
     return (
         <Layout style={styles.container}>
-            <Text style={styles.text} category="h1">
-                Welcome to UI Kitten 😻
-            </Text>
+            <Layout style={styles.formContainer}>
+                <Text category="h1" style={styles.heading}>Log In</Text>
 
-            {
-                isLoggedIn ? <Text>Logged In</Text> : <Text>Not logged in lol</Text>
-            }
+                <Layout style={styles.formBody}>
+                    <Input
+                        placeholder="Enter email"
+                        autoCompleteType="email"
+                        textContentType="emailAddress"
+                        style={styles.formInput}
+                        value={email}
+                        onChange={setEmail}
+                    />
+
+                    <Input
+                        placeholder="Enter password"
+                        autoCompleteType="password"
+                        textContentType="password"
+                        secureTextEntry={true}
+                        value={password}
+                        onChange={setPassword}
+                    />
+                </Layout>
+            </Layout>
         </Layout>
     );
 };
 
-const mapStateToProps = (state: ApplicationState) => ({
-    isLoggedIn: isLoggedIn(state),
-});
-
-export default connect(mapStateToProps)(Login);
+export default Login;

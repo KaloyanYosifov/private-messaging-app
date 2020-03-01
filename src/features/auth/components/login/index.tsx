@@ -2,10 +2,12 @@
  * External dependencies.
  */
 import React, { useState } from 'react';
+import { KeyboardAvoidingView } from 'react-native';
 import {
     Text,
     Input,
     Layout,
+    Button,
 } from '@ui-kitten/components';
 
 /**
@@ -19,29 +21,34 @@ const Login = (): React.ReactFragment => {
 
     return (
         <Layout style={styles.container}>
-            <Layout style={styles.formContainer}>
-                <Text category="h1" style={styles.heading}>Log In</Text>
+            <KeyboardAvoidingView style={{ flex: 1 }}>
+                <Layout style={styles.formContainer}>
+                    <Text category="h1" style={styles.heading}>Log In</Text>
 
-                <Layout style={styles.formBody}>
-                    <Input
-                        placeholder="Enter email"
-                        autoCompleteType="email"
-                        textContentType="emailAddress"
-                        style={styles.formInput}
-                        value={email}
-                        onChange={setEmail}
-                    />
+                    <Layout style={styles.formBody}>
+                        <Input
+                            placeholder="Enter email"
+                            autoCompleteType="email"
+                            textContentType="emailAddress"
+                            style={styles.formInput}
+                            value={email}
+                            onChange={setEmail}
+                        />
 
-                    <Input
-                        placeholder="Enter password"
-                        autoCompleteType="password"
-                        textContentType="password"
-                        secureTextEntry={true}
-                        value={password}
-                        onChange={setPassword}
-                    />
+                        <Input
+                            placeholder="Enter password"
+                            autoCompleteType="password"
+                            textContentType="password"
+                            secureTextEntry={true}
+                            style={styles.lastFormInput}
+                            value={password}
+                            onChange={setPassword}
+                        />
+
+                        <Button size="medium">Login</Button>
+                    </Layout>
                 </Layout>
-            </Layout>
+            </KeyboardAvoidingView>
         </Layout>
     );
 };

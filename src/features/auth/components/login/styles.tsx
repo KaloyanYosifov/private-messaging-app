@@ -23,6 +23,9 @@ const styles = StyleSheet.create({
     formInput: {
         marginBottom: verticalScale(10),
     },
+    lastFormInput: {
+        marginBottom: verticalScale(30),
+    },
 });
 
 export default styles;

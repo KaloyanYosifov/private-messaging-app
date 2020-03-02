@@ -9,18 +9,22 @@ import {
     Layout,
     Button,
 } from '@ui-kitten/components';
+import { connect } from 'react-redux';
 
 /**
  * Internal dependencies.
  */
 import styles from './styles';
 import HttpClient from '@/client';
+import { logIn, setAuthToken } from '@/store/authentication/actions';
 
 interface LoginProps {
-    navigation: any
+    navigation: any,
+    logIn: Function,
+    setAuthToken: Function
 }
 
-const Login = ({ navigation }: LoginProps): React.ReactFragment => {
+const Login = ({ navigation, setAuthToken, logIn }: LoginProps): React.ReactFragment => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
@@ -41,7 +45,9 @@ const Login = ({ navigation }: LoginProps): React.ReactFragment => {
 
         client.login(email, password)
             .then(response => {
-                console.log(response);
+                setAuthToken(response.data.access_token);
+                logIn();
+                navigation.navigate('PagesRouter');
             })
             .catch((error) => {
                 setHasErrors(true);
@@ -102,4 +108,9 @@ const Login = ({ navigation }: LoginProps): React.ReactFragment => {
     );
 };
 
-export default Login;
+const mapDispatchToProps = () => ({
+    logIn,
+    setAuthToken,
+});
+
+export default connect(null, mapDispatchToProps)(Login);

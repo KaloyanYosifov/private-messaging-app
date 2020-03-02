@@ -2,20 +2,22 @@
  * External dependencies.
  */
 import React from 'react';
-import { createStackNavigator } from '@react-navigation/stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 /**
  * Internal dependencies.
  */
+import PagesRouter from '@/pages/router';
 import AuthRouter from '@/features/auth/router';
 
-const Stack = createStackNavigator();
+const Tab = createBottomTabNavigator();
 
 function Router() {
     return (
-        <Stack.Navigator headerMode={'none'}>
-            <Stack.Screen name="AuthRouter" component={AuthRouter} />
-        </Stack.Navigator>
+        <Tab.Navigator tabBar={() => React.Fragment} headerMode={'none'}>
+            <Tab.Screen name="AuthRouter" component={AuthRouter} />
+            <Tab.Screen name="PagesRouter" component={PagesRouter} />
+        </Tab.Navigator>
     );
 }
 

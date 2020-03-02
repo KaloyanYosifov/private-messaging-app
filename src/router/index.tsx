@@ -2,6 +2,7 @@
  * External dependencies.
  */
 import React from 'react';
+import { connect } from 'react-redux';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 /**
@@ -9,16 +10,21 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
  */
 import PagesRouter from '@/pages/router';
 import AuthRouter from '@/features/auth/router';
+import { isLoggedIn } from '@/store/authentication/getters';
 
 const Tab = createBottomTabNavigator();
 
-function Router() {
+const Router = ({ isLoggedIn }: { isLoggedIn: Function }): React.ReactFragment => {
     return (
-        <Tab.Navigator tabBar={() => React.Fragment} headerMode={'none'}>
+        <Tab.Navigator initialRouteName={isLoggedIn ? 'PagesRouter' : 'AuthRouter'} tabBar={() => React.Fragment} headerMode={'none'}>
             <Tab.Screen name="AuthRouter" component={AuthRouter} />
             <Tab.Screen name="PagesRouter" component={PagesRouter} />
         </Tab.Navigator>
     );
-}
+};
 
-export default Router;
+const mapStateToProps = state => ({
+    isLoggedIn: isLoggedIn(state),
+});
+
+export default connect(mapStateToProps, null)(Router);

@@ -2,7 +2,7 @@
  * External dependencies.
  */
 import React, { useState } from 'react';
-import { KeyboardAvoidingView, TouchableOpacity } from 'react-native';
+import { KeyboardAvoidingView, TouchableOpacity, ActivityIndicator } from 'react-native';
 import {
     Text,
     Input,
@@ -21,13 +21,15 @@ interface LoginProps {
 }
 
 const Login = ({ navigation }: LoginProps): React.ReactFragment => {
-    const [loading, setLoading] = useState(false);
-    const [submitted, setSubmitted] = useState(false);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [submitted, setSubmitted] = useState(false);
+    const [hasErrors, setHasErrors] = useState(false);
 
     const onButtonPress = () => {
         setSubmitted(true);
+        setHasErrors(false);
 
         if (!email || !password) {
             return;
@@ -42,7 +44,7 @@ const Login = ({ navigation }: LoginProps): React.ReactFragment => {
                 console.log(response);
             })
             .catch((error) => {
-                console.error(error);
+                setHasErrors(true);
             })
             .finally(() => {
                 setLoading(false);
@@ -54,6 +56,8 @@ const Login = ({ navigation }: LoginProps): React.ReactFragment => {
             <KeyboardAvoidingView style={{ flex: 1 }}>
                 <Layout style={styles.formContainer}>
                     <Text category="h1" style={styles.heading}>Log In</Text>
+
+                    {hasErrors && <Text style={styles.errorText} status="danger">We couldn't find you in our database.</Text>}
 
                     <Layout style={styles.formBody}>
                         <Input
@@ -81,7 +85,12 @@ const Login = ({ navigation }: LoginProps): React.ReactFragment => {
                             onChangeText={setPassword}
                         />
 
-                        <Button onPress={onButtonPress} style={styles.button} size="medium">Login</Button>
+                        <Button onPress={onButtonPress}
+                            style={styles.button}
+                            size="medium"
+                            icon={() => loading ? <ActivityIndicator color="#fff" /> : <React.Fragment />}>
+                            Login
+                        </Button>
 
                         <TouchableOpacity onPress={() => navigation.navigate('Register')}>
                             <Text style={styles.linkText}>Don't have an account?</Text>

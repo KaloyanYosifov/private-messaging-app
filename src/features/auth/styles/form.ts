@@ -33,6 +33,10 @@ const styles = StyleSheet.create({
     linkText: {
         textAlign: 'center',
     },
+    errorText: {
+        marginTop: verticalScale(10),
+        textAlign: 'center',
+    },
 });
 
 export default styles;

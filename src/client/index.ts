@@ -23,6 +23,7 @@ class HttpClient {
         return axios.post(APP_BASE_URL + '/oauth/token', {
             username: email,
             password,
+            grant_type: 'password',
         });
     }
 

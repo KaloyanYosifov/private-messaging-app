@@ -27,4 +27,9 @@ const mapStateToProps = state => ({
     isLoggedIn: isLoggedIn(state),
 });
 
+const navigatorRef = React.createRef();
+
+const navigation = () => navigatorRef.current;
+
+export { navigatorRef, navigation };
 export default connect(mapStateToProps, null)(Router);

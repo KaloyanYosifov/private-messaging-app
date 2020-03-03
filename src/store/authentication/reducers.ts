@@ -19,7 +19,7 @@ const initialState: StateModel = {
 
 const reducers = {
     [Types.LOG_IN]: (state: StateModel) => ({ ...state, isLoggedIn: true }),
-    [Types.LOG_OUT]: (state: StateModel) => ({ ...state, isLoggedIn: false }),
+    [Types.LOG_OUT]: (state: StateModel) => ({ ...state, isLoggedIn: false, authToken: null }),
     [Types.SET_AUTH_TOKEN]: (state: StateModel, { payload: authToken }: SetAuthTokenAction) => ({ ...state, authToken }),
 };
 

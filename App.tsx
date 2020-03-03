@@ -14,7 +14,7 @@ import { Provider } from 'react-redux';
 /**
  * Internal dependencies.
  */
-import Router from '@/router';
+import Router, { navigatorRef } from '@/router';
 import Store, { persistor } from '@/store';
 
 const App = (): React.ReactFragment => (
@@ -22,7 +22,7 @@ const App = (): React.ReactFragment => (
         <PersistGate persistor={persistor}>
             <IconRegistry icons={EvaIconsPack} />
             <ApplicationProvider mapping={mapping} theme={theme}>
-                <NavigationContainer>
+                <NavigationContainer ref={navigatorRef}>
                     <Layout style={{ flex: 1 }}>
                         <SafeAreaView style={{ flex: 1 }}>
                             <Router />

@@ -2,25 +2,36 @@
  * External dependencies.
  */
 import React, { useState } from 'react';
+import { connect } from 'react-redux';
 import { Icon, OverflowMenu, StyleType, TopNavigationAction } from '@ui-kitten/components';
 
 /**
  * Internal dependencies.
  */
+import { navigation } from '@/router';
+import { logOut } from '@/store/authentication/actions';
 
-const TopNavigationMenu = (): React.ReactFragment => {
+interface TopNavigationMenuProps {
+    logOut: Function
+}
+
+const TopNavigationMenu = ({ logOut }: TopNavigationMenuProps): React.ReactFragment => {
     const [menuVisible, setMenuVisible] = useState(false);
 
     const menuData = [
         {
             title: 'Logout',
-            action: () => console.log('123'),
+            action: () => {
+                logOut();
+                navigation().navigate('AuthRouter');
+                setMenuVisible(false);
+            },
             icon: (style: StyleType) => <Icon {...style} name="log-out" />,
         },
     ];
 
     const onMenuSelect = (index) => {
-        console.log(index, menuData[index].action());
+        menuData[index].action();
     };
 
     const toggleMenu = () => {
@@ -41,4 +52,8 @@ const TopNavigationMenu = (): React.ReactFragment => {
     );
 };
 
-export default TopNavigationMenu;
+const mapDispatchToProps = {
+    logOut,
+};
+
+export default connect(null, mapDispatchToProps)(TopNavigationMenu);

@@ -2,15 +2,18 @@
  * External dependencies.
  */
 import React from 'react';
-import { Text } from '@ui-kitten/components';
+import { Layout, Text } from '@ui-kitten/components';
 
 /**
  * Internal dependencies.
  */
+import styles from './styles';
 
 const Home = (): React.ReactFragment => {
     return (
-        <Text>Homepage</Text>
+        <Layout style={styles.container}>
+            <Text>Homepage</Text>
+        </Layout>
     );
 };
 

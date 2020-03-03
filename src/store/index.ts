@@ -28,5 +28,9 @@ const store = createStore(
 
 const persistor = persistStore(store);
 
+if (process.env.NODE_ENV === 'development') {
+    window['persistor'] = persistor;
+}
+
 export { ApplicationState, persistor };
 export default store;

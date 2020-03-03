@@ -108,7 +108,7 @@ const Login = ({ navigation, setAuthToken, logIn }: LoginProps): React.ReactFrag
     );
 };
 
-const mapDispatchToProps = () => ({
+const mapDispatchToProps = ({
     logIn,
     setAuthToken,
 });

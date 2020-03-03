@@ -17,19 +17,19 @@ import Router from '@/router';
 import Store, { persistor } from '@/store';
 
 const App = (): React.ReactFragment => (
-    <NavigationContainer>
-        <Provider store={Store}>
-            <PersistGate persistor={persistor}>
-                <ApplicationProvider mapping={mapping} theme={theme}>
+    <Provider store={Store}>
+        <PersistGate persistor={persistor}>
+            <ApplicationProvider mapping={mapping} theme={theme}>
+                <NavigationContainer>
                     <Layout style={{ flex: 1 }}>
                         <SafeAreaView style={{ flex: 1 }}>
                             <Router />
                         </SafeAreaView>
                     </Layout>
-                </ApplicationProvider>
-            </PersistGate>
-        </Provider>
-    </NavigationContainer>
+                </NavigationContainer>
+            </ApplicationProvider>
+        </PersistGate>
+    </Provider>
 );
 
 export default App;

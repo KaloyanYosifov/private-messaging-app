@@ -2,7 +2,7 @@
  * External dependencies.
  */
 import thunk from 'redux-thunk';
-import { createStore, applyMiddleware, combineReducers } from 'redux';
+import { createStore, applyMiddleware, combineReducers, compose } from 'redux';
 import { persistStore, persistReducer } from 'redux-persist';
 
 /**
@@ -19,9 +19,11 @@ const reducers = combineReducers({
     authentication: persistReducer(persistConfig, authentication),
 });
 
+const composeEnhancers = window['__REDUX_DEVTOOLS_EXTENSION_COMPOSE__'] || compose;
+
 const store = createStore(
     reducers,
-    applyMiddleware(thunk),
+    composeEnhancers(applyMiddleware(thunk)),
 );
 
 const persistor = persistStore(store);

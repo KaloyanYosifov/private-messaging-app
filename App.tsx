@@ -5,9 +5,10 @@ import React from 'react';
 import 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native';
 import { dark as theme, mapping } from '@eva-design/eva';
+import { EvaIconsPack } from '@ui-kitten/eva-icons';
 import { PersistGate } from 'redux-persist/integration/react';
 import { NavigationContainer } from '@react-navigation/native';
-import { ApplicationProvider, Layout } from '@ui-kitten/components';
+import { ApplicationProvider, IconRegistry, Layout } from '@ui-kitten/components';
 import { Provider } from 'react-redux';
 
 /**
@@ -19,6 +20,7 @@ import Store, { persistor } from '@/store';
 const App = (): React.ReactFragment => (
     <Provider store={Store}>
         <PersistGate persistor={persistor}>
+            <IconRegistry icons={EvaIconsPack} />
             <ApplicationProvider mapping={mapping} theme={theme}>
                 <NavigationContainer>
                     <Layout style={{ flex: 1 }}>

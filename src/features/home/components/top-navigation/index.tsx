@@ -13,7 +13,7 @@ import TopNavigationMenu from '@/features/home/components/top-navigation-menu';
 const TopNavigation = (): React.ReactFragment => {
     return (
         <Layout styles={styles.container}>
-            <UiKittenTopNavigation title="Test" rightControls={<TopNavigationMenu />} />
+            <UiKittenTopNavigation title="Dashboard" alignment="center" rightControls={<TopNavigationMenu />} />
         </Layout>
     );
 };

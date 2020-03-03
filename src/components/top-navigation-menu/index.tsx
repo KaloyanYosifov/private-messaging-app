@@ -25,13 +25,19 @@ const TopNavigationMenu = ({ logOut, menuData }: TopNavigationMenuProps): React.
         action: () => {
             logOut();
             navigation().navigate('AuthRouter');
-            setMenuVisible(false);
         },
         icon: (style: StyleType) => <Icon {...style} name="log-out" />,
     }];
 
     const onMenuSelect = (index) => {
-        menuData[index].action();
+        const response = menuData[index].action();
+
+        if (response instanceof Promise) {
+            response.finally(() => setMenuVisible(false));
+            return;
+        }
+        
+        setMenuVisible(false);
     };
 
     const toggleMenu = () => {

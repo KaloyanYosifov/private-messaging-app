@@ -2,7 +2,7 @@
  * External dependencies.
  */
 import React from 'react';
-import { Divider, Icon, Layout } from '@ui-kitten/components';
+import { Icon, Layout } from '@ui-kitten/components';
 /**
  * Internal dependencies.
  */
@@ -27,8 +27,7 @@ const Home = (): React.ReactFragment => {
 
     return (
         <Layout style={styles.container}>
-            <TopNavigation menuData={menuData} />
-            <Divider />
+            <TopNavigation title="Dashboard" menuData={menuData} />
             <Index />
         </Layout>
     );

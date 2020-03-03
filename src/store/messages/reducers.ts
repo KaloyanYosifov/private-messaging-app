@@ -14,12 +14,15 @@ import ActionsModel, { PaginateAction } from '@/store/messages/models/actions.mo
 
 const initialState: StateModel = {
     messages: [],
+    currentPage: 0,
+    hasMorePages: true,
 };
 
 const reducers = {
     [Types.LOAD_MORE_MESSAGES]: (state: StateModel, action: PaginateAction) => ({
         ...state,
-        messages: [...state.messages, ...action.payload],
+        messages: [...state.messages, ...action.payload.data],
+        currentPage: state.currentPage + 1,
     }),
 };
 

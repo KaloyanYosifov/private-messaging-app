@@ -1,3 +1,10 @@
+/**
+ * Internal dependencies.
+ */
+import { MessageData } from '@/interfaces/messaging/MessageData';
+
 export interface StateModel {
-    messages: Array<any>
+    messages: MessageData[],
+    currentPage: 0,
+    hasMorePages: boolean
 }

@@ -12,7 +12,7 @@ import Messages from '@/client/messages';
 const messages = new Messages();
 
 export const loadMoreMessages = () => (dispatch: Dispatch<PaginateAction>) => {
-    messages.paginate(1)
+    return messages.paginate(1)
         .then(response => {
             dispatch({ type: Types.LOAD_MORE_MESSAGES, payload: response.data });
         });

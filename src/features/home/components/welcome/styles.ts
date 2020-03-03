@@ -6,7 +6,10 @@ import { verticalScale } from 'react-native-size-matters';
 
 export default StyleSheet.create({
     container: {
-        minHeight: verticalScale(2200),
-        marginBottom: verticalScale(30),
+        alignItems: 'center',
+        marginTop: verticalScale(20),
+    },
+    heading: {
+        marginTop: verticalScale(20),
     },
 });

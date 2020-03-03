@@ -10,25 +10,25 @@ import { Icon, OverflowMenu, StyleType, TopNavigationAction } from '@ui-kitten/c
  */
 import { navigation } from '@/router';
 import { logOut } from '@/store/authentication/actions';
+import { MenuData } from '@/interfaces/MenuData';
 
 interface TopNavigationMenuProps {
-    logOut: Function
+    logOut: Function,
+    menuData: MenuData[]
 }
 
-const TopNavigationMenu = ({ logOut }: TopNavigationMenuProps): React.ReactFragment => {
+const TopNavigationMenu = ({ logOut, menuData }: TopNavigationMenuProps): React.ReactFragment => {
     const [menuVisible, setMenuVisible] = useState(false);
 
-    const menuData = [
-        {
-            title: 'Logout',
-            action: () => {
-                logOut();
-                navigation().navigate('AuthRouter');
-                setMenuVisible(false);
-            },
-            icon: (style: StyleType) => <Icon {...style} name="log-out" />,
+    const localMenuData: MenuData[] = [...menuData, {
+        title: 'Logout',
+        action: () => {
+            logOut();
+            navigation().navigate('AuthRouter');
+            setMenuVisible(false);
         },
-    ];
+        icon: (style: StyleType) => <Icon {...style} name="log-out" />,
+    }];
 
     const onMenuSelect = (index) => {
         menuData[index].action();
@@ -41,7 +41,7 @@ const TopNavigationMenu = ({ logOut }: TopNavigationMenuProps): React.ReactFragm
     return (
         <OverflowMenu
             visible={menuVisible}
-            data={menuData}
+            data={localMenuData}
             onSelect={onMenuSelect}
             onBackdropPress={toggleMenu}>
             <TopNavigationAction

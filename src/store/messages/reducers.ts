@@ -19,10 +19,11 @@ const initialState: StateModel = {
 };
 
 const reducers = {
-    [Types.LOAD_MORE_MESSAGES]: (state: StateModel, action: PaginateAction) => ({
+    [Types.LOAD_MORE_MESSAGES]: (state: StateModel, { payload }: PaginateAction) => ({
         ...state,
-        messages: [...state.messages, ...action.payload.data],
+        messages: [...state.messages, ...payload.data],
         currentPage: state.currentPage + 1,
+        hasMorePages: payload.has_more_pages,
     }),
 };
 

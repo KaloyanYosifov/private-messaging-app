@@ -4,5 +4,6 @@
 import { MessageData } from '@/interfaces/messaging/MessageData';
 
 export interface LoadMorePagesRequestData {
-    data: MessageData[]
+    data: MessageData[],
+    has_more_pages: boolean
 }

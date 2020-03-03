@@ -30,13 +30,13 @@ const TopNavigationMenu = ({ logOut, menuData }: TopNavigationMenuProps): React.
     }];
 
     const onMenuSelect = (index) => {
-        const response = menuData[index].action();
+        const response = localMenuData[index].action();
 
         if (response instanceof Promise) {
             response.finally(() => setMenuVisible(false));
             return;
         }
-        
+
         setMenuVisible(false);
     };
 

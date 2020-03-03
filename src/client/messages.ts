@@ -11,7 +11,7 @@ class Messages {
     }
 
     public paginate(page: number = 1) {
-        return this.httpClient.get('/messages', { page });
+        return this.httpClient.get('messages', { page });
     }
 }
 

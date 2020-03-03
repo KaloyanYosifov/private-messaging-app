@@ -49,14 +49,20 @@ class HttpClient {
 
     makeRequest(method: Method, endpoint: string, data: any = {}) {
         const config = {
+            url: endpoint,
             method,
-            data,
         };
+
+        if (/get/i.test(method)) {
+            config['params'] = { ...data };
+        } else {
+            config['data'] = { ...data };
+        }
 
         const authToken = getAuthToken(Store.getState());
         if (authToken) {
-            config['header'] = {
-                Authorization: `Bearer: ${authToken}`,
+            config['headers'] = {
+                Authorization: `Bearer ${authToken}`,
             };
         }
 

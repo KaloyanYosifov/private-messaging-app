@@ -8,19 +8,23 @@ import { persistStore, persistReducer } from 'redux-persist';
 /**
  * Internal dependencies.
  */
-import authentication, { persistConfig } from './authentication/reducers';
 import messages from './messages/reducers';
+import conversations from './conversations/reducers';
+import authentication, { persistConfig } from './authentication/reducers';
 import { StateModel as MessagesStateModel } from '@/store/messages/models/state.model';
+import { StateModel as ConversationsStateModel } from '@/store/conversations/models/state.model';
 import { StateModel as AuthenticationStateModel } from '@/store/authentication/models/state.model';
 
 interface ApplicationState {
+    messages: MessagesStateModel,
+    conversations: ConversationsStateModel,
     authentication: AuthenticationStateModel,
-    messages: MessagesStateModel
 }
 
 const reducers = combineReducers({
-    authentication: persistReducer(persistConfig, authentication),
     messages,
+    conversations,
+    authentication: persistReducer(persistConfig, authentication),
 });
 
 const composeEnhancers = window['__REDUX_DEVTOOLS_EXTENSION_COMPOSE__'] || compose;

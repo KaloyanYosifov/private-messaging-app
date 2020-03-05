@@ -3,7 +3,7 @@
  */
 import React from 'react';
 import { Image } from 'react-native';
-import { Card, Layout, Text } from '@ui-kitten/components';
+import { Layout, Text } from '@ui-kitten/components';
 /**
  * Internal dependencies.
  */

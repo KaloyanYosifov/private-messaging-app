@@ -8,11 +8,11 @@ import { Icon, Layout, Text } from '@ui-kitten/components';
 /**
  * Internal dependencies.
  */
-import styles from '@/pages/messages/styles';
+import styles from '@/pages/conversations/styles';
 import TopNavigation from '@/components/top-navigation';
 import { MenuData } from '@/interfaces/MenuData';
 import { navigation } from '@/router';
-import { loadMoreMessages } from '@/store/messages/actions';
+import { loadMoreConversations } from '@/store/conversations/actions';
 
 const menuData: MenuData[] = [
     {
@@ -24,9 +24,9 @@ const menuData: MenuData[] = [
     },
 ];
 
-const Messages = ({ loadMoreMessages }: { loadMoreMessages: Function }): React.ReactFragment => {
+const Conversations = ({ loadMoreConversations }: { loadMoreConversations: Function }): React.ReactFragment => {
     useEffect(() => {
-        loadMoreMessages();
+        loadMoreConversations();
 
         return () => {
 
@@ -35,16 +35,16 @@ const Messages = ({ loadMoreMessages }: { loadMoreMessages: Function }): React.R
 
     return (
         <Layout style={styles.container}>
-            <TopNavigation title="Messages" menuData={menuData} />
+            <TopNavigation title="People you chat with" menuData={menuData} />
             <Text>
-                Messages
+                Conversations
             </Text>
         </Layout>
     );
 };
 
 const mapDispatchToProps = ({
-    loadMoreMessages,
+    loadMoreConversations,
 });
 
-export default connect(null, mapDispatchToProps)(Messages);
+export default connect(null, mapDispatchToProps)(Conversations);

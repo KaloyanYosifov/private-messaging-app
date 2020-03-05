@@ -8,7 +8,7 @@ import { createStackNavigator } from '@react-navigation/stack';
  * Internal dependencies.
  */
 import Dashboard from '@/pages/dashboard';
-import Messages from '@/pages/messages';
+import Conversations from '@/pages/conversations';
 
 const Stack = createStackNavigator();
 
@@ -16,7 +16,7 @@ function Router() {
     return (
         <Stack.Navigator headerMode={'none'}>
             <Stack.Screen name="Dashboard" component={Dashboard} />
-            <Stack.Screen name="Messages" component={Messages} />
+            <Stack.Screen name="Conversations" component={Conversations} />
         </Stack.Navigator>
     );
 }

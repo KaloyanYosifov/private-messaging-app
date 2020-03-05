@@ -15,9 +15,9 @@ import { navigation } from '@/router';
 
 const menuData: MenuData[] = [
     {
-        title: 'Messages',
+        title: 'Conversations',
         action: () => {
-            navigation().navigate('Messages');
+            navigation().navigate('Conversations');
         },
         icon: (styles) => <Icon {...styles} name="message-circle-outline" />,
     },

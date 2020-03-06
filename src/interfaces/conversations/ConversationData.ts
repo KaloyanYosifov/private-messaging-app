@@ -9,5 +9,5 @@ export interface ConversationData {
     created_at: string,
     updated_at: string,
     users: UserData[],
-    message: MessageData
+    last_message: MessageData
 }

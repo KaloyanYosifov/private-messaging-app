@@ -64,6 +64,9 @@
     "paths": {
       "@/*": [
         "./src/*"
+      ],
+      "@resources/*": [
+        "./resources/*"
       ]
     }
 

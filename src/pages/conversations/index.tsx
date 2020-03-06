@@ -14,6 +14,8 @@ import { MenuData } from '@/interfaces/MenuData';
 import { navigation } from '@/router';
 import { loadMoreConversations } from '@/store/conversations/actions';
 
+import ConversationsList from '@/features/conversations/components/conversations-list';
+
 const menuData: MenuData[] = [
     {
         title: 'Dashboard',
@@ -27,18 +29,12 @@ const menuData: MenuData[] = [
 const Conversations = ({ loadMoreConversations }: { loadMoreConversations: Function }): React.ReactFragment => {
     useEffect(() => {
         loadMoreConversations();
-
-        return () => {
-
-        };
-    });
+    }, []);
 
     return (
         <Layout style={styles.container}>
             <TopNavigation title="People you chat with" menuData={menuData} />
-            <Text>
-                Conversations
-            </Text>
+            <ConversationsList />
         </Layout>
     );
 };

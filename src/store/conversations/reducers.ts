@@ -1,12 +1,7 @@
 /**
- * External dependencies.
- */
-import AsyncStorage from '@react-native-community/async-storage';
-
-/**
  * Internal dependencies.
  */
-import Types from '@/store/messages/types';
+import Types from '@/store/conversations/types';
 
 import { createReducer } from '@/helpers';
 import { StateModel } from '@/store/conversations/models/state.model';
@@ -19,9 +14,9 @@ const initialState: StateModel = {
 };
 
 const reducers = {
-    [Types.LOAD_MORE_MESSAGES]: (state: StateModel, { payload }: PaginateAction) => ({
+    [Types.LOAD_MORE_CONVERSATIONS]: (state: StateModel, { payload }: PaginateAction) => ({
         ...state,
-        messages: [...state.messages, ...payload.data],
+        conversations: [...state.conversations, ...payload.data],
         currentPage: state.currentPage + 1,
         hasMorePages: payload.has_more_pages,
     }),

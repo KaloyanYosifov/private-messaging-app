@@ -8,6 +8,6 @@ export interface ConversationData {
     id: number,
     created_at: string,
     updated_at: string,
-    user: UserData,
+    users: UserData[],
     message: MessageData
 }

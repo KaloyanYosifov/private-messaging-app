@@ -25,7 +25,7 @@ const Conversation = ({ route, getUserData }: ConversationProps): React.ReactFra
     const [messages, setMessages, loading, hasMorePages] = useChatMessages(conversationId);
 
     const onSend = (newMessages: IMessage[]) => {
-        setMessages(GiftedChat.append(messages, newMessages));
+        setMessages(GiftedChat.append(newMessages, messages));
     };
 
     return (
@@ -40,6 +40,8 @@ const Conversation = ({ route, getUserData }: ConversationProps): React.ReactFra
                         :
                         (<>
                             <GiftedChat
+                                listViewProps={{ onRefresh: () => { console.log('test'); }, refreshing: false }}
+                                inverted={false}
                                 onSend={onSend}
                                 messages={messages}
                                 user={{

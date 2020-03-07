@@ -21,6 +21,7 @@ interface ConversationProps {
 
 const Conversation = ({ route, getUserData }: ConversationProps): React.ReactFragment => {
     const conversationId = route.params.conversationId;
+    const userName = route.params.userName;
     const [messages, setMessages, loading, hasMorePages] = useChatMessages(conversationId);
 
     const onSend = (newMessages: IMessage[]) => {
@@ -28,23 +29,26 @@ const Conversation = ({ route, getUserData }: ConversationProps): React.ReactFra
     };
 
     return (
-        <Layout style={[styles.container, loading ? styles.isLoading : {}]}>
-            {
-                loading
-                    ?
-                    <Spinner size="giant" />
-                    :
-                    (<>
-                        <TopNavigation title={messages.length ? messages[0].user.avatar : 'test'} />
-                        <GiftedChat
-                            onSend={onSend}
-                            messages={messages}
-                            user={{
-                                _id: getUserData.id,
-                            }}
-                        />
-                    </>)
-            }
+        <Layout style={{ flex: 1 }}>
+            <TopNavigation title={userName} />
+
+            <Layout style={[styles.container, loading ? styles.isLoading : {}]}>
+                {
+                    loading
+                        ?
+                        <Spinner size="giant" />
+                        :
+                        (<>
+                            <GiftedChat
+                                onSend={onSend}
+                                messages={messages}
+                                user={{
+                                    _id: getUserData.id,
+                                }}
+                            />
+                        </>)
+                }
+            </Layout>
         </Layout>
     );
 };

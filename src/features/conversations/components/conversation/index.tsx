@@ -10,11 +10,12 @@ import formatDistance from 'date-fns/formatDistance';
  * Internal dependencies.
  */
 import styles from './styles';
+import { navigation } from '@/router';
 import { ConversationData } from '@/interfaces/conversations/ConversationData';
 
 interface ConversationProps {
     conversation: ConversationData,
-};
+}
 
 const Conversation = ({ conversation }: ConversationProps): ReactFragment => {
     const user = conversation.users[0];
@@ -27,6 +28,12 @@ const Conversation = ({ conversation }: ConversationProps): ReactFragment => {
         description = 'New message';
     }
 
+    const onPress = () => {
+        navigation().navigate('Conversation', {
+            conversationId: conversation.id,
+        });
+    };
+
     return (
         <ListItem
             title={user.name}
@@ -34,6 +41,7 @@ const Conversation = ({ conversation }: ConversationProps): ReactFragment => {
             icon={(style: ImageStyle) => <Icon {...style} width={32} height={32} name="person" />}
             titleStyle={styles.listItemTitle}
             descriptionStyle={styles.listItemDescription}
+            onPress={onPress}
         />
     );
 };

@@ -19,7 +19,6 @@ interface ConversationListProps {
 }
 
 const ConversationsList = ({ getConversations }: ConversationListProps): ReactFragment => {
-    console.log(getConversations);
     return (
         <Layout style={styles.container}>
             <SafeAreaView style={styles.conversationsContainer}>

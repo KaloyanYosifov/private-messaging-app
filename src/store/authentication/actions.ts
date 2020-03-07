@@ -4,7 +4,6 @@
 import { Dispatch } from 'redux';
 import Users from '@/client/users';
 import Types from '@/store/authentication/types';
-import { UserData } from '@/interfaces/UserData';
 import { LogInAction, LogOutAction, SetAuthTokenAction, LoadUserDataAction } from '@/store/authentication/models/actions.model';
 
 const userClient = new Users();

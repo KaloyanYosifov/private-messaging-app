@@ -10,8 +10,8 @@ class Messages {
         this.httpClient = httpClient || new HttpClient();
     }
 
-    public paginate(page: number = 1) {
-        return this.httpClient.get('messages', { page });
+    public paginate(page: number = 1, conversation_id?: number | null) {
+        return this.httpClient.get('messages', { page, conversation_id });
     }
 }
 

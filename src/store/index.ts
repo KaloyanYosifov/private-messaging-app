@@ -2,29 +2,24 @@
  * External dependencies.
  */
 import thunk from 'redux-thunk';
-import { createStore, applyMiddleware, combineReducers, compose, Dispatch } from 'redux';
-import { persistStore, persistReducer } from 'redux-persist';
-
+import { applyMiddleware, combineReducers, compose, createStore, Dispatch } from 'redux';
+import { persistReducer, persistStore } from 'redux-persist';
 /**
  * Internal dependencies.
  */
-import messages from './messages/reducers';
 import conversations from './conversations/reducers';
 import authentication, { persistConfig } from './authentication/reducers';
-import { StateModel as MessagesStateModel } from '@/store/messages/models/state.model';
 import { StateModel as ConversationsStateModel } from '@/store/conversations/models/state.model';
 import { StateModel as AuthenticationStateModel } from '@/store/authentication/models/state.model';
 
 import ApplicationActions from '@/store/actions';
 
 interface ApplicationState {
-    messages: MessagesStateModel,
     conversations: ConversationsStateModel,
     authentication: AuthenticationStateModel,
 }
 
 const reducers = combineReducers({
-    messages,
     conversations,
     authentication: persistReducer(persistConfig, authentication),
 });
@@ -47,7 +42,7 @@ const dispatch = <T = any>(action: (dispatch: Dispatch<ApplicationActions>) => T
 };
 
 const getter = <T = any>(getterFunction: (state: ApplicationState) => T): T => {
-    return getterFunction(store.getState());
+    return getterFunction(store.getState() as ApplicationState);
 };
 
 export { getter, dispatch, persistor, ApplicationState, ApplicationActions };

@@ -6,6 +6,7 @@
  * Internal dependencies.
  */
 import Types from '@/store/authentication/types';
+import { UserData } from '@/interfaces/UserData';
 
 export interface LogInAction {
     type: Types.LOG_IN,
@@ -20,6 +21,11 @@ export interface SetAuthTokenAction {
     payload: string | null
 }
 
-type ActionsModel = LogInAction | LogOutAction | SetAuthTokenAction;
+export interface LoadUserDataAction {
+    type: Types.LOAD_USER_DATA,
+    payload: UserData
+}
+
+type ActionsModel = LogInAction | LogOutAction | SetAuthTokenAction | LoadUserDataAction;
 
 export default ActionsModel;

@@ -1,8 +1,9 @@
 /**
  * External dependencies.
  */
-import React from 'react';
+import React, { useState } from 'react';
 import { Layout, Text } from '@ui-kitten/components';
+import { GiftedChat, IMessage } from 'react-native-gifted-chat';
 
 /**
  * Internal dependencies.
@@ -10,11 +11,22 @@ import { Layout, Text } from '@ui-kitten/components';
 import styles from './styles';
 
 const Conversation = ({ route }: { route: any }): React.ReactFragment => {
-    const conversationId = route.params.conversationId;
+    const [messages, setMessages] = useState<IMessage[]>();
+    const conversation = route.params.conversation;
+
+    const onSend = (newMessages: IMessage[]) => {
+        setMessages(GiftedChat.append(messages, newMessages));
+    };
 
     return (
         <Layout style={styles.container}>
-            <Text>{conversationId}</Text>
+            <GiftedChat
+                onSend={onSend}
+                messages={messages}
+                user={{
+                    _id: 1,
+                }}
+            />
         </Layout>
     );
 };

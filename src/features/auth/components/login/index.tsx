@@ -16,26 +16,27 @@ import { connect } from 'react-redux';
  */
 import styles from './styles';
 import HttpClient from '@/client';
-import { logIn, setAuthToken } from '@/store/authentication/actions';
+import { logIn, setAuthToken, loadUserData } from '@/store/authentication/actions';
 
 interface LoginProps {
     navigation: any,
     logIn: Function,
-    setAuthToken: Function
+    setAuthToken: Function,
+    loadUserData: () => Promise<void>
 }
 
-const Login = ({ navigation, setAuthToken, logIn }: LoginProps): React.ReactFragment => {
+const Login = ({ navigation, setAuthToken, logIn, loadUserData }: LoginProps): React.ReactFragment => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
     const [submitted, setSubmitted] = useState(false);
     const [hasErrors, setHasErrors] = useState(false);
 
-    const onButtonPress = () => {
+    const onButtonPress = async () => {
         setSubmitted(true);
         setHasErrors(false);
 
-        if (!email || !password) {
+        if (!email || !password || loading) {
             return;
         }
 
@@ -43,18 +44,20 @@ const Login = ({ navigation, setAuthToken, logIn }: LoginProps): React.ReactFrag
 
         const client = new HttpClient();
 
-        client.login(email, password)
-            .then(response => {
-                setAuthToken(response.data.access_token);
-                logIn();
-                navigation.navigate('PagesRouter');
-            })
-            .catch((error) => {
-                setHasErrors(true);
-            })
-            .finally(() => {
-                setLoading(false);
-            });
+        try {
+            const response = await client.login(email, password);
+
+            setAuthToken(response.data.access_token);
+            logIn();
+
+            await loadUserData();
+
+            navigation.navigate('PagesRouter');
+        } catch (error) {
+            setHasErrors(true);
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -111,6 +114,7 @@ const Login = ({ navigation, setAuthToken, logIn }: LoginProps): React.ReactFrag
 const mapDispatchToProps = ({
     logIn,
     setAuthToken,
+    loadUserData,
 });
 
 export default connect(null, mapDispatchToProps)(Login);

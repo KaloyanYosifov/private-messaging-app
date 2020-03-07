@@ -19,6 +19,10 @@ interface ConversationProps {
     getUserData: UserData,
 }
 
+const renderLoading = () => (
+    <Layout style={[styles.container, styles.isLoading]}><Spinner size="giant" /></Layout>
+);
+
 const Conversation = ({ route, getUserData }: ConversationProps): React.ReactFragment => {
     const conversationId = route.params.conversationId;
     const userName = route.params.userName;
@@ -44,6 +48,7 @@ const Conversation = ({ route, getUserData }: ConversationProps): React.ReactFra
                                 inverted={false}
                                 onSend={onSend}
                                 messages={messages}
+                                renderLoading={renderLoading}
                                 user={{
                                     _id: getUserData.id,
                                 }}

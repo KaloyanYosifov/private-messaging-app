@@ -2,6 +2,7 @@
  * Internal dependencies.
  */
 import HttpClient from '@/client/index';
+import { MessageData } from '@/interfaces/messaging/MessageData';
 
 class Messages {
     protected httpClient: HttpClient;
@@ -10,7 +11,7 @@ class Messages {
         this.httpClient = httpClient || new HttpClient();
     }
 
-    public paginate(page: number = 1, conversation_id?: number | null) {
+    public paginate(page: number = 1, conversation_id?: number | null): Promise<{ data: MessageData[], has_more_pages: boolean }> {
         return this.httpClient.get('messages', { page, conversation_id })
             .then(response => response.data);
     }

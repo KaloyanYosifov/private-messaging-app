@@ -7,4 +7,8 @@ export default StyleSheet.create({
     container: {
         flex: 1,
     },
+    isLoading: {
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
 });

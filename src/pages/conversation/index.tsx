@@ -12,6 +12,7 @@ import styles from './styles';
 import { UserData } from '@/interfaces/UserData';
 import { getUserData } from '@/store/authentication/getters';
 import { useChatMessages } from '@/pages/conversation/hooks';
+import TopNavigation from '@/features/conversation/components/top-navigation';
 
 interface ConversationProps {
     route: any,
@@ -33,13 +34,16 @@ const Conversation = ({ route, getUserData }: ConversationProps): React.ReactFra
                     ?
                     <Spinner size="giant" />
                     :
-                    <GiftedChat
-                        onSend={onSend}
-                        messages={messages}
-                        user={{
-                            _id: getUserData.id,
-                        }}
-                    />
+                    (<>
+                        <TopNavigation title={messages.length ? messages[0].user.avatar : 'test'} />
+                        <GiftedChat
+                            onSend={onSend}
+                            messages={messages}
+                            user={{
+                                _id: getUserData.id,
+                            }}
+                        />
+                    </>)
             }
         </Layout>
     );

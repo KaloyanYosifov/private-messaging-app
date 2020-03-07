@@ -13,6 +13,7 @@ import styles from './styles';
 import { getUserData } from '@/store/authentication/getters';
 import { UserData } from '@/interfaces/UserData';
 import Messages from '@/client/messages';
+import { MessageData } from '@/interfaces/messaging/MessageData';
 
 interface ConversationProps {
     route: any,
@@ -21,14 +22,31 @@ interface ConversationProps {
 
 const messagesClient = new Messages();
 
+const parseMessages = (messages: MessageData[]): IMessage[] => {
+    console.log(messages);
+    return messages.map(message => ({
+        _id: message.id,
+        text: message.text,
+        createdAt: new Date(message.created_at),
+        user: {
+            _id: message.user.id,
+            name: message.user.name,
+        },
+    }));
+};
+
 const Conversation = ({ route, getUserData }: ConversationProps): React.ReactFragment => {
-    const [messages, setMessages] = useState<IMessage[]>();
+    const [messages, setMessages] = useState<IMessage[]>([]);
     const conversationId = route.params.conversationId;
 
     useEffect(() => {
         messagesClient.paginate(1, conversationId)
             .then(response => {
+                if (!response.data) {
+                    return;
+                }
 
+                setMessages(GiftedChat.append(messages, parseMessages(response.data)));
             });
     }, []);
 

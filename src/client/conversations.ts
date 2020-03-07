@@ -11,7 +11,8 @@ class Conversations {
     }
 
     public paginate(page: number = 1) {
-        return this.httpClient.get('conversations', { page });
+        return this.httpClient.get('conversations', { page })
+            .then(response => response.data);
     }
 }
 

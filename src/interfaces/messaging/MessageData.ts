@@ -1,7 +1,12 @@
+/**
+ * Internal dependencies.
+ */
+import { UserData } from '@/interfaces/UserData';
+
 export interface MessageData {
     id: number,
     unique_id: string,
-    user_id: number,
+    user: UserData,
     conversation_id: number,
     text: string,
     read_at: string | null,

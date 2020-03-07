@@ -11,7 +11,8 @@ class Messages {
     }
 
     public paginate(page: number = 1, conversation_id?: number | null) {
-        return this.httpClient.get('messages', { page, conversation_id });
+        return this.httpClient.get('messages', { page, conversation_id })
+            .then(response => response.data);
     }
 }
 

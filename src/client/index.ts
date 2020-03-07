@@ -10,6 +10,7 @@ import { APP_BASE_URL, APP_API_ENDPOINT } from 'react-native-dotenv';
  */
 import { HTTP_UNAUTHORIZED } from '@/constants/Responses';
 
+import { navigation } from '@/router';
 import { dispatch, getter } from '@/store';
 import { logOut } from '@/store/authentication/actions';
 import { getAuthToken } from '@/store/authentication/getters';
@@ -27,6 +28,7 @@ class HttpClient {
         }, (errors) => {
             if (get(errors, 'response.status', null) === HTTP_UNAUTHORIZED) {
                 dispatch(logOut());
+                navigation().navigate('AuthRouter');
             }
         });
     }

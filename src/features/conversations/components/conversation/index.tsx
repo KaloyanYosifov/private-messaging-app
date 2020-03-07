@@ -1,14 +1,15 @@
 /**
  * External dependencies.
  */
-import get from 'lodash.get';
 import React, { ReactFragment } from 'react';
+import { ImageStyle } from 'react-native';
 import { Icon, ListItem } from '@ui-kitten/components';
 import formatDistance from 'date-fns/formatDistance';
 
 /**
  * Internal dependencies.
  */
+import styles from './styles';
 import { ConversationData } from '@/interfaces/conversations/ConversationData';
 
 interface ConversationProps {
@@ -30,7 +31,9 @@ const Conversation = ({ conversation }: ConversationProps): ReactFragment => {
         <ListItem
             title={user.name}
             description={description}
-            icon={(style) => <Icon {...style} name="person" />}
+            icon={(style: ImageStyle) => <Icon {...style} width={32} height={32} name="person" />}
+            titleStyle={styles.listItemTitle}
+            descriptionStyle={styles.listItemDescription}
         />
     );
 };

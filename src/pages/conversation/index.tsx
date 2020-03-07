@@ -2,9 +2,8 @@
  * External dependencies.
  */
 import React from 'react';
-import { View } from 'react-native';
 import { connect } from 'react-redux';
-import { Layout } from '@ui-kitten/components';
+import { Layout, Spinner } from '@ui-kitten/components';
 import { GiftedChat, IMessage } from 'react-native-gifted-chat';
 /**
  * Internal dependencies.
@@ -13,7 +12,6 @@ import styles from './styles';
 import { UserData } from '@/interfaces/UserData';
 import { getUserData } from '@/store/authentication/getters';
 import { useChatMessages } from '@/pages/conversation/hooks';
-import Loader from '@/features/conversation/components/loader';
 
 interface ConversationProps {
     route: any,
@@ -33,7 +31,7 @@ const Conversation = ({ route, getUserData }: ConversationProps): React.ReactFra
             {
                 loading
                     ?
-                    <Loader />
+                    <Spinner size="giant" />
                     :
                     <GiftedChat
                         onSend={onSend}

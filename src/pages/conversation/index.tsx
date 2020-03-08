@@ -1,7 +1,7 @@
 /**
  * External dependencies.
  */
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Layout, Spinner } from '@ui-kitten/components';
 import { GiftedChat, IMessage } from 'react-native-gifted-chat';
@@ -16,6 +16,7 @@ import { getUserData } from '@/store/authentication/getters';
 import { useChatMessages } from '@/pages/conversation/hooks';
 import TopNavigation from '@/features/conversation/components/top-navigation';
 import Messages from '@/client/messages';
+import socket from '@/helpers/socket';
 
 interface ConversationProps {
     route: any,
@@ -49,6 +50,13 @@ const Conversation = ({ route, getUserData }: ConversationProps): React.ReactFra
     }, [hasMorePages, loadMessages]);
 
     const isLoading = loading && !firstLoading;
+
+    useEffect(() => {
+        socket.private(`conversation.message.created.${conversationId}`)
+            .listen('MessageCreatedEvent', (e) => {
+                console.log(e);
+            });
+    });
 
     return (
         <Layout style={{ flex: 1 }}>

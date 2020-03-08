@@ -37,11 +37,9 @@ const Conversation = ({ route, getUserData }: ConversationProps): React.ReactFra
 
     const onRefresh = useCallback(() => {
         if (!hasMorePages) {
-            console.log('test');
             return;
         }
 
-        console.log(hasMorePages);
         loadMessages();
     }, [hasMorePages, loadMessages]);
 

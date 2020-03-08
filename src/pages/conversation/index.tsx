@@ -16,7 +16,7 @@ import { getUserData } from '@/store/authentication/getters';
 import { useChatMessages } from '@/pages/conversation/hooks';
 import TopNavigation from '@/features/conversation/components/top-navigation';
 import Messages from '@/client/messages';
-import socket from '@/helpers/socket';
+import { getSocket } from '@/helpers/socket';
 
 interface ConversationProps {
     route: any,
@@ -52,8 +52,13 @@ const Conversation = ({ route, getUserData }: ConversationProps): React.ReactFra
     const isLoading = loading && !firstLoading;
 
     useEffect(() => {
+        const socket = getSocket();
+
+        if (!socket) {
+            return;
+        }
         socket.private(`conversation.message.created.${conversationId}`)
-            .listen('MessageCreatedEvent', (e) => {
+            .listen('message.created.event', (e) => {
                 console.log(e);
             });
     });

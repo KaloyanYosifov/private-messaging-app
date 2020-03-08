@@ -9,10 +9,35 @@ import socketio from 'socket.io-client';
  */
 import { APP_BASE_URL } from 'react-native-dotenv';
 
-const socket = new Echo({
-    host: `${APP_BASE_URL}:6001`,
-    broadcaster: 'socket.io',
-    client: socketio,
-});
+let socket: Echo | null;
 
-export default socket;
+export const init = (token: string) => {
+    if (socket) {
+        return;
+    }
+
+    socket = new Echo({
+        host: `${APP_BASE_URL}:6001`,
+        broadcaster: 'socket.io',
+        client: socketio,
+        auth: {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        },
+    });
+};
+
+export const destroy = () => {
+    if (!socket) {
+        return;
+    }
+
+    socket.disconnect();
+
+    socket = null;
+};
+
+export const getSocket = () => {
+    return socket;
+};

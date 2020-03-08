@@ -1,7 +1,7 @@
 /**
  * External dependencies.
  */
-import React from 'react';
+import React, { useCallback } from 'react';
 import { connect } from 'react-redux';
 import { Layout, Spinner } from '@ui-kitten/components';
 import { GiftedChat, IMessage } from 'react-native-gifted-chat';
@@ -28,9 +28,9 @@ const Conversation = ({ route, getUserData }: ConversationProps): React.ReactFra
     const userName = route.params.userName;
     const [messages, setMessages, loading, hasMorePages] = useChatMessages(conversationId);
 
-    const onSend = (newMessages: IMessage[]) => {
-        setMessages(GiftedChat.append(newMessages, messages));
-    };
+    const onSend = useCallback((newMessages: IMessage[]) => {
+        setMessages((previousMessages) => GiftedChat.append(newMessages, previousMessages));
+    }, []);
 
     return (
         <Layout style={{ flex: 1 }}>

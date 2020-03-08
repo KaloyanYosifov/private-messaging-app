@@ -1,7 +1,7 @@
 /**
  * External dependencies.
  */
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { GiftedChat, IMessage } from 'react-native-gifted-chat';
 
 /**
@@ -16,8 +16,9 @@ export const useChatMessages = (conversationId: number, initialMessages: IMessag
     const [loading, setLoading] = useState<boolean>(false);
     const [currentPage, setCurrentPage] = useState<number>(0);
     const [hasMorePages, setHasMorePages] = useState<boolean>(true);
+    const [firstLoading, setFirstLoading] = useState<boolean>(false);
 
-    const loadMessages = () => {
+    const loadMessages = useCallback(() => {
         if (loading) {
             return;
         }
@@ -31,17 +32,18 @@ export const useChatMessages = (conversationId: number, initialMessages: IMessag
                 }
 
                 setHasMorePages(response.has_more_pages);
-                setMessages(GiftedChat.append(messages, parseMessages(response.data)));
+                setMessages((previousMessages) => GiftedChat.append(previousMessages, parseMessages(response.data)));
             })
             .finally(() => {
                 setLoading(false);
-                setCurrentPage(currentPage + 1);
+                setFirstLoading(true);
+                setCurrentPage((previousPage) => previousPage + 1);
             });
-    };
+    }, [loading, currentPage]);
 
     useEffect(() => {
         loadMessages();
     }, []);
 
-    return [messages, setMessages, loading, hasMorePages];
+    return [messages, setMessages, loading, firstLoading, loadMessages, hasMorePages];
 };

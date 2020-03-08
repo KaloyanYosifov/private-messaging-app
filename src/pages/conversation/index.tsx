@@ -9,6 +9,8 @@ import { GiftedChat, IMessage } from 'react-native-gifted-chat';
  * Internal dependencies.
  */
 import styles from './styles';
+
+import Chat from '@/components/chat';
 import { UserData } from '@/interfaces/UserData';
 import { getUserData } from '@/store/authentication/getters';
 import { useChatMessages } from '@/pages/conversation/hooks';
@@ -26,26 +28,40 @@ const renderLoading = () => (
 const Conversation = ({ route, getUserData }: ConversationProps): React.ReactFragment => {
     const conversationId = route.params.conversationId;
     const userName = route.params.userName;
-    const [messages, setMessages, loading, hasMorePages] = useChatMessages(conversationId);
+    const [messages, setMessages, loading, firstLoading, loadMessages, hasMorePages] = useChatMessages(conversationId);
 
-    const onSend = useCallback((newMessages: IMessage[]) => {
-        setMessages((previousMessages) => GiftedChat.append(newMessages, previousMessages));
+    const onSend = useCallback((newMessages: IMessage[], scrollToBottom: () => void) => {
+        setMessages((previousMessages) => GiftedChat.prepend(previousMessages, newMessages));
+        scrollToBottom();
     }, []);
+
+    const onRefresh = useCallback(() => {
+        if (!hasMorePages) {
+            console.log('test');
+            return;
+        }
+
+        console.log(hasMorePages);
+        loadMessages();
+    }, [hasMorePages, loadMessages]);
+
+    const isLoading = loading && !firstLoading;
 
     return (
         <Layout style={{ flex: 1 }}>
             <TopNavigation title={userName} />
 
-            <Layout style={[styles.container, loading ? styles.isLoading : {}]}>
+            <Layout style={[styles.container, isLoading ? styles.isLoading : {}]}>
                 {
-                    loading
+                    isLoading
                         ?
                         <Spinner size="giant" />
                         :
                         (<>
-                            <GiftedChat
-                                listViewProps={{ onRefresh: () => { console.log('test'); }, refreshing: false }}
+                            <Chat
+                                listViewProps={{ onRefresh, refreshing: loading }}
                                 inverted={false}
+                                scrollToBottom={false}
                                 onSend={onSend}
                                 messages={messages}
                                 renderLoading={renderLoading}

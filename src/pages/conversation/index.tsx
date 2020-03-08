@@ -34,8 +34,8 @@ const Conversation = ({ route, getUserData }: ConversationProps): React.ReactFra
     const [messages, setMessages, loading, firstLoading, loadMessages, hasMorePages] = useChatMessages(conversationId);
 
     const onSend = useCallback((newMessages: IMessage[], scrollToBottom: () => void) => {
-        scrollToBottom();
         setMessages((previousMessages) => GiftedChat.prepend(previousMessages, newMessages));
+        setTimeout(() => { scrollToBottom(); }, 50);
 
         messageClient.send(newMessages[0].text, conversationId);
     }, []);

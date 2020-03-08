@@ -15,6 +15,7 @@ import { UserData } from '@/interfaces/UserData';
 import { getUserData } from '@/store/authentication/getters';
 import { useChatMessages } from '@/pages/conversation/hooks';
 import TopNavigation from '@/features/conversation/components/top-navigation';
+import Messages from '@/client/messages';
 
 interface ConversationProps {
     route: any,
@@ -25,14 +26,18 @@ const renderLoading = () => (
     <Layout style={[styles.container, styles.isLoading]}><Spinner size="giant" /></Layout>
 );
 
+const messageClient = new Messages();
+
 const Conversation = ({ route, getUserData }: ConversationProps): React.ReactFragment => {
     const conversationId = route.params.conversationId;
     const userName = route.params.userName;
     const [messages, setMessages, loading, firstLoading, loadMessages, hasMorePages] = useChatMessages(conversationId);
 
     const onSend = useCallback((newMessages: IMessage[], scrollToBottom: () => void) => {
-        setMessages((previousMessages) => GiftedChat.prepend(previousMessages, newMessages));
         scrollToBottom();
+        setMessages((previousMessages) => GiftedChat.prepend(previousMessages, newMessages));
+
+        messageClient.send(newMessages[0].text, conversationId);
     }, []);
 
     const onRefresh = useCallback(() => {

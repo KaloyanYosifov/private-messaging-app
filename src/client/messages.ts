@@ -15,6 +15,11 @@ class Messages {
         return this.httpClient.get('messages', { page, conversation_id })
             .then(response => response.data);
     }
+
+    public send(text: string, conversation_id: number): Promise<MessageData> {
+        return this.httpClient.post('messages', { text, conversation_id })
+            .then(response => response.data);
+    }
 }
 
 export default Messages;

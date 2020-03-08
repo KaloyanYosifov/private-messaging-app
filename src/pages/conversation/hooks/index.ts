@@ -30,9 +30,9 @@ export const useChatMessages = (conversationId: number, initialMessages: IMessag
                 if (!response.data) {
                     return;
                 }
-
+                console.log(parseMessages(response.data));
                 setHasMorePages(response.has_more_pages);
-                setMessages((previousMessages) => GiftedChat.append(previousMessages, parseMessages(response.data)));
+                setMessages((previousMessages) => GiftedChat.append(previousMessages, parseMessages(response.data).reverse()));
             })
             .finally(() => {
                 setLoading(false);

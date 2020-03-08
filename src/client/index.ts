@@ -30,6 +30,8 @@ class HttpClient {
                 dispatch(logOut());
                 navigation().navigate('AuthRouter');
             }
+
+            return errors;
         });
     }
 

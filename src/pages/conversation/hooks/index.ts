@@ -8,7 +8,7 @@ import { GiftedChat, IMessage } from 'react-native-gifted-chat';
  * Internal dependencies.
  */
 import Messages from '@/client/messages';
-import { parseMessages } from '@/pages/conversation/utils';
+import { convertMessagesToIMessages } from '@/pages/conversation/utils';
 
 export const useChatMessages = (conversationId: number, initialMessages: IMessage[] = []) => {
     const messagesClient = new Messages();
@@ -32,7 +32,7 @@ export const useChatMessages = (conversationId: number, initialMessages: IMessag
                 }
 
                 setHasMorePages(response.has_more_pages);
-                setMessages((previousMessages) => GiftedChat.append(previousMessages, parseMessages(response.data).reverse()));
+                setMessages((previousMessages) => GiftedChat.append(previousMessages, convertMessagesToIMessages(response.data).reverse()));
             })
             .finally(() => {
                 setLoading(false);

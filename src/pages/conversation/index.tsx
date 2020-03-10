@@ -18,6 +18,7 @@ import TopNavigation from '@/features/conversation/components/top-navigation';
 import Messages from '@/client/messages';
 import { getSocket } from '@/helpers/socket';
 import { MessageData } from '@/interfaces/messaging/MessageData';
+import { convertMessagesToIMessages } from '@/pages/conversation/utils';
 
 interface ConversationProps {
     route: any,
@@ -64,7 +65,9 @@ const Conversation = ({ route, getUserData }: ConversationProps): React.ReactFra
                     return;
                 }
 
-                setMessages((previousMessages) => GiftedChat.prepend(previousMessages, [message as IMessage]));
+                setMessages(
+                    (previousMessages) => GiftedChat.prepend(previousMessages, convertMessagesToIMessages([message])),
+                );
             });
     }, []);
 

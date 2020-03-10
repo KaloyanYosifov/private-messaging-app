@@ -58,10 +58,10 @@ const Conversation = ({ route, getUserData }: ConversationProps): React.ReactFra
             return;
         }
         socket.private(`conversation.message.created.${conversationId}`)
-            .listen('message.created.event', (e) => {
+            .listen('.message.created.event', (e) => {
                 console.log(e);
             });
-    });
+    }, []);
 
     return (
         <Layout style={{ flex: 1 }}>

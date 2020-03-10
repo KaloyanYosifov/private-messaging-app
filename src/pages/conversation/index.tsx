@@ -1,10 +1,12 @@
 /**
  * External dependencies.
  */
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { Layout, Spinner } from '@ui-kitten/components';
 import { GiftedChat, IMessage } from 'react-native-gifted-chat';
+import { Channel } from 'laravel-echo/src/channel/channel';
+import debounce from 'lodash.debounce';
 /**
  * Internal dependencies.
  */
@@ -34,6 +36,8 @@ const messageClient = new Messages();
 const Conversation = ({ route, getUserData }: ConversationProps): React.ReactFragment => {
     const conversationId = route.params.conversationId;
     const userName = route.params.userName;
+    const channel = useRef<Channel | null>(null);
+    const [typing, setTyping] = useState<boolean>(true);
     const [messages, setMessages, loading, firstLoading, loadMessages, hasMorePages] = useChatMessages(conversationId);
 
     const onSend = useCallback((newMessages: IMessage[], scrollToBottom: () => void) => {
@@ -51,6 +55,28 @@ const Conversation = ({ route, getUserData }: ConversationProps): React.ReactFra
         loadMessages();
     }, [hasMorePages, loadMessages]);
 
+    const stopTyping = useCallback(debounce(() => {
+        if (!channel.current) {
+            return;
+        }
+
+        channel.current.whisper('typing', {
+            typing: false,
+        });
+    }, 300), [channel.current]);
+
+    const onTextChange = useCallback(() => {
+        if (!channel.current) {
+            return;
+        }
+
+        channel.current.whisper('typing', {
+            typing: true,
+        });
+
+        stopTyping();
+    }, [channel.current]);
+
     const isLoading = loading && !firstLoading;
 
     useEffect(() => {
@@ -59,7 +85,8 @@ const Conversation = ({ route, getUserData }: ConversationProps): React.ReactFra
         if (!socket) {
             return;
         }
-        socket.private(`conversation.message.created.${conversationId}`)
+
+        channel.current = socket.private(`conversation.message.created.${conversationId}`)
             .listen('.message.created.event', ({ message }: { message: MessageData }) => {
                 if (message.user.id === getUserData.id) {
                     return;
@@ -68,7 +95,16 @@ const Conversation = ({ route, getUserData }: ConversationProps): React.ReactFra
                 setMessages(
                     (previousMessages) => GiftedChat.prepend(previousMessages, convertMessagesToIMessages([message])),
                 );
+            })
+            .listenForWhisper('typing', (e) => {
+                console.log(e.typing);
+                setTyping(e.typing);
             });
+
+        return () => {
+            socket.leave(`conversation.message.created.${conversationId}`);
+            console.log('left');
+        };
     }, []);
 
     return (
@@ -89,6 +125,8 @@ const Conversation = ({ route, getUserData }: ConversationProps): React.ReactFra
                                 onSend={onSend}
                                 messages={messages}
                                 renderLoading={renderLoading}
+                                onInputTextChanged={onTextChange}
+                                isTyping={typing}
                                 user={{
                                     _id: getUserData.id,
                                 }}

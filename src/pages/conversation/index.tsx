@@ -3,7 +3,7 @@
  */
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
-import { Layout, Spinner } from '@ui-kitten/components';
+import { Layout, Spinner, Text } from '@ui-kitten/components';
 import { GiftedChat, IMessage } from 'react-native-gifted-chat';
 import { Channel } from 'laravel-echo/src/channel/channel';
 import debounce from 'lodash.debounce';
@@ -21,6 +21,7 @@ import Messages from '@/client/messages';
 import { getSocket } from '@/helpers/socket';
 import { MessageData } from '@/interfaces/messaging/MessageData';
 import { convertMessagesToIMessages } from '@/pages/conversation/utils';
+import TypingIndicator from '@/components/typing-indicator';
 
 interface ConversationProps {
     route: any,
@@ -103,7 +104,6 @@ const Conversation = ({ route, getUserData }: ConversationProps): React.ReactFra
 
         return () => {
             socket.leave(`conversation.message.created.${conversationId}`);
-            console.log('left');
         };
     }, []);
 
@@ -126,7 +126,7 @@ const Conversation = ({ route, getUserData }: ConversationProps): React.ReactFra
                                 messages={messages}
                                 renderLoading={renderLoading}
                                 onInputTextChanged={onTextChange}
-                                isTyping={typing}
+                                renderChatFooter={() => (<TypingIndicator isTyping={true} />)}
                                 user={{
                                     _id: getUserData.id,
                                 }}

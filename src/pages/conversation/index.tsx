@@ -17,6 +17,7 @@ import { useChatMessages } from '@/pages/conversation/hooks';
 import TopNavigation from '@/features/conversation/components/top-navigation';
 import Messages from '@/client/messages';
 import { getSocket } from '@/helpers/socket';
+import { MessageData } from '@/interfaces/messaging/MessageData';
 
 interface ConversationProps {
     route: any,
@@ -58,8 +59,12 @@ const Conversation = ({ route, getUserData }: ConversationProps): React.ReactFra
             return;
         }
         socket.private(`conversation.message.created.${conversationId}`)
-            .listen('.message.created.event', (e) => {
-                console.log(e);
+            .listen('.message.created.event', ({ message }: { message: MessageData }) => {
+                if (message.user.id === getUserData.id) {
+                    return;
+                }
+
+                setMessages((previousMessages) => GiftedChat.prepend(previousMessages, [message as IMessage]));
             });
     }, []);
 

@@ -1,7 +1,7 @@
 /**
  * External dependencies.
  */
-import React, { useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import { Animated } from 'react-native';
 import { TypingAnimation } from 'react-native-typing-animation';
 

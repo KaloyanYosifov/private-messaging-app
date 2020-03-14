@@ -5,3 +5,4 @@ import { ApplicationState } from '@/store';
 import { ConversationData } from '@/interfaces/conversations/ConversationData';
 
 export const getConversations = (state: ApplicationState): ConversationData[] => state.conversations.conversations;
+export const getCurrentPage = (state: ApplicationState): number => state.conversations.currentPage;

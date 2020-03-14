@@ -17,7 +17,7 @@ export const loadMoreConversations = () => (dispatch: Dispatch<PaginateAction>, 
     const state = getState();
 
     if (!hasMorePages(state)) {
-        return;
+        return Promise.resolve();
     }
 
     return conversations.paginate(getCurrentPage(state) + 1)

@@ -1,29 +1,77 @@
 /**
  * External dependencies.
  */
-import React, { ReactFragment } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { SafeAreaView } from 'react-native';
-import { Layout, List } from '@ui-kitten/components';
+import { Layout, List, Spinner, withStyles } from '@ui-kitten/components';
 /**
  * Internal dependencies.
  */
 import styles from './styles';
 
-import { getConversations } from '@/store/conversations/getters';
-import { ConversationData } from '@/interfaces/conversations/ConversationData';
+import { getConversations, hasMorePages } from '@/store/conversations/getters';
+import { loadMoreConversations } from '@/store/conversations/actions';
 import Conversation from '@/features/conversations/components/conversation';
+import { ConversationData } from '@/interfaces/conversations/ConversationData';
 
 interface ConversationListProps {
-    getConversations: ConversationData[]
+    hasMorePages: boolean,
+    getConversations: ConversationData[],
+    loadMoreConversations: () => Promise<void>,
+    themedStyle: { list: object }
 }
 
-const ConversationsList = ({ getConversations }: ConversationListProps): ReactFragment => {
+const ConversationsList = ({
+    hasMorePages,
+    getConversations,
+    loadMoreConversations,
+    themedStyle,
+}: ConversationListProps): any => {
+    const [loading, setLoading] = useState<boolean>(false);
+    const [firstLoad, setFirstLoad] = useState<boolean>(true);
+
+    const loadMore = useCallback(() => {
+        if (loading || !hasMorePages) {
+            return;
+        }
+
+        setLoading(true);
+
+        loadMoreConversations()
+            .finally(() => {
+                setLoading(false);
+                setFirstLoad(false);
+            });
+    }, [loading, hasMorePages]);
+
+    useEffect(() => {
+        loadMore();
+    }, []);
+
+    const renderList = () => {
+        if (firstLoad) {
+            return (
+                <Layout style={styles.loadingContainer}>
+                    <Spinner size="giant" />
+                </Layout>
+            );
+        }
+
+        return (<List
+            style={themedStyle.list}
+            onRefresh={loadMore}
+            refreshing={loading}
+            data={getConversations}
+            renderItem={({ item }) => <Conversation conversation={item} />}
+        />);
+    };
+
     return (
         <Layout style={styles.container}>
             <SafeAreaView style={styles.conversationsContainer}>
                 <Layout>
-                    <List data={getConversations} renderItem={({ item }) => <Conversation conversation={item} />} />
+                    {renderList()}
                 </Layout>
             </SafeAreaView>
         </Layout>
@@ -31,7 +79,18 @@ const ConversationsList = ({ getConversations }: ConversationListProps): ReactFr
 };
 
 const mapStateToProps = (state) => ({
+    hasMorePages: hasMorePages(state),
     getConversations: getConversations(state),
 });
 
-export default connect(mapStateToProps)(ConversationsList);
+const mapDispatchToProps = {
+    loadMoreConversations,
+};
+
+export const ThemedConversationList = withStyles(ConversationsList, (theme) => ({
+    list: {
+        backgroundColor: theme['background-basic-color-1'],
+    },
+}));
+
+export default connect(mapStateToProps, mapDispatchToProps)(ThemedConversationList);

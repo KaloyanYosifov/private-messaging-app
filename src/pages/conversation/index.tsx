@@ -1,12 +1,10 @@
 /**
  * External dependencies.
  */
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback } from 'react';
 import { connect } from 'react-redux';
-import { Layout, Spinner, Text } from '@ui-kitten/components';
+import { Layout, Spinner } from '@ui-kitten/components';
 import { GiftedChat, IMessage } from 'react-native-gifted-chat';
-import { Channel } from 'laravel-echo/src/channel/channel';
-import debounce from 'lodash.debounce';
 /**
  * Internal dependencies.
  */
@@ -15,13 +13,12 @@ import styles from './styles';
 import Chat from '@/components/chat';
 import { UserData } from '@/interfaces/UserData';
 import { getUserData } from '@/store/authentication/getters';
-import { useChatMessages } from '@/pages/conversation/hooks';
+import { useChatMessages, useMessagingSocket } from '@/pages/conversation/hooks';
 import TopNavigation from '@/features/conversation/components/top-navigation';
 import Messages from '@/client/messages';
-import { getSocket } from '@/helpers/socket';
+import TypingIndicator from '@/components/typing-indicator';
 import { MessageData } from '@/interfaces/messaging/MessageData';
 import { convertMessagesToIMessages } from '@/pages/conversation/utils';
-import TypingIndicator from '@/components/typing-indicator';
 
 interface ConversationProps {
     route: any,
@@ -37,9 +34,13 @@ const messageClient = new Messages();
 const Conversation = ({ route, getUserData }: ConversationProps): React.ReactFragment => {
     const conversationId = route.params.conversationId;
     const userName = route.params.userName;
-    const channel = useRef<Channel | null>(null);
-    const [typing, setTyping] = useState<boolean>(true);
     const [messages, setMessages, loading, firstLoading, loadMessages, hasMorePages] = useChatMessages(conversationId);
+    const onReceivedMessage = (messages: MessageData[]) => {
+        setMessages(
+            (previousMessages) => GiftedChat.prepend(previousMessages, convertMessagesToIMessages(messages)),
+        );
+    };
+    const [typing, onTextChange] = useMessagingSocket(`conversation.message.created.${conversationId}`, getUserData.id, onReceivedMessage);
 
     const onSend = useCallback((newMessages: IMessage[], scrollToBottom: () => void) => {
         setMessages((previousMessages) => GiftedChat.prepend(previousMessages, newMessages));
@@ -56,56 +57,7 @@ const Conversation = ({ route, getUserData }: ConversationProps): React.ReactFra
         loadMessages();
     }, [hasMorePages, loadMessages]);
 
-    const stopTyping = useCallback(debounce(() => {
-        if (!channel.current) {
-            return;
-        }
-
-        channel.current.whisper('typing', {
-            typing: false,
-        });
-    }, 300), [channel.current]);
-
-    const onTextChange = useCallback(() => {
-        if (!channel.current) {
-            return;
-        }
-
-        channel.current.whisper('typing', {
-            typing: true,
-        });
-
-        stopTyping();
-    }, [channel.current]);
-
     const isLoading = loading && !firstLoading;
-
-    useEffect(() => {
-        const socket = getSocket();
-
-        if (!socket) {
-            return;
-        }
-
-        channel.current = socket.private(`conversation.message.created.${conversationId}`)
-            .listen('.message.created.event', ({ message }: { message: MessageData }) => {
-                if (message.user.id === getUserData.id) {
-                    return;
-                }
-
-                setMessages(
-                    (previousMessages) => GiftedChat.prepend(previousMessages, convertMessagesToIMessages([message])),
-                );
-            })
-            .listenForWhisper('typing', (e) => {
-                console.log(e.typing);
-                setTyping(e.typing);
-            });
-
-        return () => {
-            socket.leave(`conversation.message.created.${conversationId}`);
-        };
-    }, []);
 
     return (
         <Layout style={{ flex: 1 }}>
@@ -126,7 +78,7 @@ const Conversation = ({ route, getUserData }: ConversationProps): React.ReactFra
                                 messages={messages}
                                 renderLoading={renderLoading}
                                 onInputTextChanged={onTextChange}
-                                renderChatFooter={() => (<TypingIndicator isTyping={true} />)}
+                                renderChatFooter={() => (<TypingIndicator isTyping={typing} />)}
                                 user={{
                                     _id: getUserData.id,
                                 }}

@@ -1,7 +1,7 @@
 /**
  * External dependencies.
  */
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useReducer, useState } from 'react';
 import { GiftedChat, IMessage } from 'react-native-gifted-chat';
 
 /**
@@ -9,41 +9,130 @@ import { GiftedChat, IMessage } from 'react-native-gifted-chat';
  */
 import Messages from '@/client/messages';
 import { convertMessagesToIMessages } from '@/pages/conversation/utils';
+import {
+    SET_PAGE,
+    SET_LOADING,
+    SET_MESSAGES,
+    HAS_MORE_PAGES,
+    SET_FIRST_LOADING,
+} from './types';
+
+interface StateModel {
+    messages: IMessage[],
+    loading: boolean,
+    currentPage: number,
+    hasMorePages: boolean,
+    firstLoading: boolean
+};
+
+const initialState: StateModel = {
+    messages: [],
+    loading: false,
+    currentPage: 0,
+    hasMorePages: false,
+    firstLoading: false,
+};
+
+const messagesReducer = (state: StateModel, action): any => {
+    if (action.type === SET_LOADING) {
+        return {
+            ...state,
+            loading: action.payload,
+        };
+    }
+
+    if (action.type === HAS_MORE_PAGES) {
+        return {
+            ...state,
+            hasMorePages: action.payload,
+        };
+    }
+
+    if (action.type === SET_MESSAGES) {
+        return {
+            ...state,
+            messages: [...action.payload],
+        };
+    }
+
+    if (action.type === SET_FIRST_LOADING) {
+        return {
+            ...state,
+            firstLoading: action.payload,
+        };
+    }
+
+    if (action.type === SET_PAGE) {
+        return {
+            ...state,
+            page: action.payload,
+        };
+    }
+
+    return state;
+};
+
+const messagesClient = new Messages();
 
 export const useChatMessages = (conversationId: number, initialMessages: IMessage[] = []) => {
-    const messagesClient = new Messages();
-    const [messages, setMessages] = useState<IMessage[]>(initialMessages);
-    const [loading, setLoading] = useState<boolean>(false);
-    const [currentPage, setCurrentPage] = useState<number>(0);
-    const [hasMorePages, setHasMorePages] = useState<boolean>(true);
-    const [firstLoading, setFirstLoading] = useState<boolean>(false);
+    // do not get scared of the error
+    // it's a bug in the type system of @types/react
+    const [state, dispatch] = useReducer<any>(
+        messagesReducer,
+        { ...initialState, messages: [...initialMessages] },
+    );
+
+    const setMessages = useCallback((setter: (messages: IMessage[]) => IMessage[]) => {
+        dispatch({
+            type: SET_MESSAGES,
+            payload: setter(state.messages),
+        });
+    }, [state.messages]);
 
     const loadMessages = useCallback(() => {
-        if (loading) {
+        if (state.loading) {
             return;
         }
 
-        setLoading(true);
+        dispatch({
+            type: SET_LOADING,
+            payload: true,
+        });
 
-        messagesClient.paginate(currentPage + 1, conversationId)
+        messagesClient.paginate(state.currentPage + 1, conversationId)
             .then(response => {
                 if (!response.data) {
                     return;
                 }
 
-                setHasMorePages(response.has_more_pages);
-                setMessages((previousMessages) => GiftedChat.append(previousMessages, convertMessagesToIMessages(response.data).reverse()));
+                dispatch({
+                    type: HAS_MORE_PAGES,
+                    payload: response.has_more_pages,
+                });
+
+                setMessages((previousMessages) => GiftedChat.append(
+                    previousMessages, convertMessagesToIMessages(response.data).reverse(),
+                ));
             })
             .finally(() => {
-                setLoading(false);
-                setFirstLoading(true);
-                setCurrentPage((previousPage) => previousPage + 1);
+                dispatch({
+                    type: SET_LOADING,
+                    payload: false,
+                });
+                dispatch({
+                    type: SET_FIRST_LOADING,
+                    payload: true,
+                });
+                dispatch({
+                    type: SET_PAGE,
+                    payload: state.currentPage + 1,
+                });
             });
-    }, [loading, currentPage]);
+    }, [dispatch]);
 
     useEffect(() => {
         loadMessages();
     }, []);
 
-    return [messages, setMessages, loading, firstLoading, loadMessages, hasMorePages];
+    return [state, setMessages, loadMessages];
 };

@@ -32,9 +32,9 @@ const renderLoading = () => (
 const messageClient = new Messages();
 
 const Conversation = ({ route, getUserData }: ConversationProps): React.ReactFragment => {
-    const conversationId = route.params.conversationId;
     const userName = route.params.userName;
-    const [messages, setMessages, loading, firstLoading, loadMessages, hasMorePages] = useChatMessages(conversationId);
+    const conversationId = route.params.conversationId;
+    const [state, setMessages, loadMessages] = useChatMessages(conversationId);
     const onReceivedMessage = (messages: MessageData[]) => {
         setMessages(
             (previousMessages) => GiftedChat.prepend(previousMessages, convertMessagesToIMessages(messages)),
@@ -47,17 +47,17 @@ const Conversation = ({ route, getUserData }: ConversationProps): React.ReactFra
         setTimeout(() => { scrollToBottom(); }, 50);
 
         messageClient.send(newMessages[0].text, conversationId);
-    }, []);
+    }, [setMessages]);
 
     const onRefresh = useCallback(() => {
-        if (!hasMorePages) {
+        if (!state.hasMorePages) {
             return;
         }
 
         loadMessages();
-    }, [hasMorePages, loadMessages]);
+    }, [state.hasMorePages, loadMessages]);
 
-    const isLoading = loading && !firstLoading;
+    const isLoading = state.loading && !state.firstLoading;
 
     return (
         <Layout style={{ flex: 1 }}>
@@ -71,11 +71,11 @@ const Conversation = ({ route, getUserData }: ConversationProps): React.ReactFra
                         :
                         (<>
                             <Chat
-                                listViewProps={{ onRefresh, refreshing: loading }}
+                                listViewProps={{ onRefresh, refreshing: state.loading }}
                                 inverted={false}
                                 scrollToBottom={false}
                                 onSend={onSend}
-                                messages={messages}
+                                messages={state.messages}
                                 renderLoading={renderLoading}
                                 onInputTextChanged={onTextChange}
                                 renderChatFooter={() => (<TypingIndicator isTyping={typing} />)}

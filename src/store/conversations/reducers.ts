@@ -1,4 +1,9 @@
 /**
+ * External dependencies.
+ */
+import cloneDeep from 'lodash.clonedeep';
+
+/**
  * Internal dependencies.
  */
 import Types from '@/store/conversations/types';
@@ -20,6 +25,7 @@ const reducers = {
         currentPage: state.currentPage + 1,
         hasMorePages: payload.has_more_pages,
     }),
+    [Types.RESET_CONVERSATIONS]: () => cloneDeep(initialState),
 };
 
 export default createReducer<StateModel, ActionsModel>(initialState, reducers);

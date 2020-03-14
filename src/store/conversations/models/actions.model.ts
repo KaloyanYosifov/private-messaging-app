@@ -9,6 +9,10 @@ export interface PaginateAction {
     payload: LoadMoreConversationsRequestData
 }
 
-type ActionsModel = PaginateAction;
+export interface ResetAction {
+    type: Types.RESET_CONVERSATIONS
+}
+
+type ActionsModel = PaginateAction | ResetAction;
 
 export default ActionsModel;

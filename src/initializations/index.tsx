@@ -12,8 +12,12 @@ import { getAuthToken } from '@/store/authentication/getters';
 
 const Initializations = ({ getAuthToken }: { getAuthToken: string }): React.ReactFragment => {
     useEffect(() => {
+        if (!getAuthToken) {
+            return;
+        }
+
         init(getAuthToken);
-    }, []);
+    }, [getAuthToken]);
 
     return (<></>);
 };

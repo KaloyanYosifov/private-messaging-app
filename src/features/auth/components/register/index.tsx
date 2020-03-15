@@ -2,7 +2,7 @@
  * External dependencies.
  */
 import React, { useState } from 'react';
-import { KeyboardAvoidingView, TouchableOpacity } from 'react-native';
+import { KeyboardAvoidingView, Platform, TouchableOpacity } from 'react-native';
 import {
     Text,
     Input,
@@ -27,8 +27,11 @@ const Register = ({ navigation }: RegisterProps): React.ReactFragment => {
 
     return (
         <Layout style={styles.container}>
-            <KeyboardAvoidingView style={{ flex: 1 }}>
-                <Layout style={styles.formContainer}>
+            <Layout style={styles.formContainer}>
+                <KeyboardAvoidingView
+                    behavior={(Platform.OS === 'ios') ? 'padding' : null}
+                    keyboardVerticalOffset={Platform.select({ ios: 80, android: 200 })}
+                >
                     <Text category="h1" style={styles.heading}>Register</Text>
 
                     <Layout style={styles.formBody}>
@@ -76,8 +79,8 @@ const Register = ({ navigation }: RegisterProps): React.ReactFragment => {
                             <Text style={styles.linkText}>Already have an account?</Text>
                         </TouchableOpacity>
                     </Layout>
-                </Layout>
-            </KeyboardAvoidingView>
+                </KeyboardAvoidingView>
+            </Layout>
         </Layout>
     );
 };

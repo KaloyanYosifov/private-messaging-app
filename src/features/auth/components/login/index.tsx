@@ -2,7 +2,7 @@
  * External dependencies.
  */
 import React, { useState } from 'react';
-import { KeyboardAvoidingView, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { KeyboardAvoidingView, TouchableOpacity, ActivityIndicator, Platform } from 'react-native';
 import {
     Text,
     Input,
@@ -62,8 +62,11 @@ const Login = ({ navigation, setAuthToken, logIn, loadUserData }: LoginProps): R
 
     return (
         <Layout style={styles.container}>
-            <KeyboardAvoidingView style={{ flex: 1 }}>
-                <Layout style={styles.formContainer}>
+            <Layout style={styles.formContainer}>
+                <KeyboardAvoidingView
+                    behavior={(Platform.OS === 'ios') ? 'padding' : null}
+                    keyboardVerticalOffset={Platform.select({ ios: 80, android: 200 })}
+                >
                     <Text category="h1" style={styles.heading}>Log In</Text>
 
                     {hasErrors && <Text style={styles.errorText} status="danger">We couldn't find you in our database.</Text>}
@@ -105,8 +108,8 @@ const Login = ({ navigation, setAuthToken, logIn, loadUserData }: LoginProps): R
                             <Text style={styles.linkText}>Don't have an account?</Text>
                         </TouchableOpacity>
                     </Layout>
-                </Layout>
-            </KeyboardAvoidingView>
+                </KeyboardAvoidingView>
+            </Layout>
         </Layout>
     );
 };

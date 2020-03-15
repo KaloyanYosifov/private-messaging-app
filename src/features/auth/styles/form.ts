@@ -13,8 +13,7 @@ const styles = StyleSheet.create({
     },
     formContainer: {
         flex: 1,
-        justifyContent: 'flex-end',
-        marginBottom: verticalScale(200),
+        justifyContent: 'center',
         paddingLeft: moderateScale(30, .5),
         paddingRight: moderateScale(30, .5),
     },

@@ -87,7 +87,7 @@ export const useChatMessages = (conversationId: number, initialMessages: IMessag
             type: SET_MESSAGES,
             payload: setter(state.messages),
         });
-    }, [state.messages]);
+    }, [state]);
 
     const loadMessages = useCallback(() => {
         if (state.loading) {

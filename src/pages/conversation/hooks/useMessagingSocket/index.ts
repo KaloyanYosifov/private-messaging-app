@@ -47,13 +47,6 @@ export const useMessagingSocket = (
         }
 
         channel.current = socket.private(channelName)
-            .listen('.message.created.event', ({ message }: { message: MessageData }) => {
-                if (message.user.id === currentUserId) {
-                    return;
-                }
-
-                onReceivedMessages([message]);
-            })
             .listenForWhisper('typing', (e) => {
                 setTyping(e.typing);
             });
@@ -62,6 +55,27 @@ export const useMessagingSocket = (
             socket.leave(channelName);
         };
     }, []);
+
+    useEffect(() => {
+        const privateChannel = channel.current;
+
+        if (!privateChannel) {
+            return;
+        }
+
+        privateChannel
+            .listen('.message.created.event', ({ message }: { message: MessageData }) => {
+                if (message.user.id === currentUserId) {
+                    return;
+                }
+
+                onReceivedMessages([message]);
+            });
+
+        return () => {
+            privateChannel.stopListening('.message.created.event');
+        };
+    }, [onReceivedMessages]);
 
     return [typing, onTextChange];
 };

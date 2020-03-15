@@ -3,6 +3,7 @@
  */
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
+import { StackActions } from '@react-navigation/native';
 import { Icon, OverflowMenu, StyleType, TopNavigationAction } from '@ui-kitten/components';
 
 /**
@@ -24,6 +25,7 @@ const TopNavigationMenu = ({ logOut, menuData }: TopNavigationMenuProps): React.
         title: 'Logout',
         action: () => {
             logOut();
+            navigation().dispatch(StackActions.popToTop);
             navigation().navigate('AuthRouter');
         },
         icon: (style: StyleType) => <Icon {...style} name="log-out" />,

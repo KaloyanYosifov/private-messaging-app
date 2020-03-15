@@ -1,8 +1,10 @@
 /**
  * External dependencies.
  */
-import React from 'react';
+import { connect } from 'react-redux';
+import React, { useEffect } from 'react';
 import { Icon, Layout } from '@ui-kitten/components';
+
 /**
  * Internal dependencies.
  */
@@ -12,6 +14,7 @@ import { MenuData } from '@/interfaces/MenuData';
 import { navigation } from '@/router';
 
 import ConversationsList from '@/features/conversations/components/conversations-list';
+import { resetConversations } from '@/store/conversations/actions';
 
 const menuData: MenuData[] = [
     {
@@ -23,7 +26,11 @@ const menuData: MenuData[] = [
     },
 ];
 
-const Conversations = (): React.ReactFragment => {
+const Conversations = ({ resetConversations }: { resetConversations: () => void }): React.ReactFragment => {
+    useEffect(() => {
+        return resetConversations;
+    }, []);
+
     return (
         <Layout style={styles.container}>
             <TopNavigation title="People you chat with" menuData={menuData} />
@@ -32,4 +39,8 @@ const Conversations = (): React.ReactFragment => {
     );
 };
 
-export default Conversations;
+const mapDispatchToProps = {
+    resetConversations,
+};
+
+export default connect(null, mapDispatchToProps)(Conversations);

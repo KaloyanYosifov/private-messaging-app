@@ -9,7 +9,7 @@ import { ApplicationState } from '@/store';
 import Types from '@/store/conversations/types';
 import Conversations from '@/client/conversations';
 import { getCurrentPage, hasMorePages } from '@/store/conversations/getters';
-import { PaginateAction } from '@/store/conversations/models/actions.model';
+import { PaginateAction, ResetAction } from '@/store/conversations/models/actions.model';
 
 const conversations = new Conversations();
 
@@ -25,3 +25,5 @@ export const loadMoreConversations = () => (dispatch: Dispatch<PaginateAction>, 
             dispatch({ type: Types.LOAD_MORE_CONVERSATIONS, payload: response });
         });
 };
+
+export const resetConversations = () => (dispatch: Dispatch<ResetAction>) => dispatch({ type: Types.RESET_CONVERSATIONS });

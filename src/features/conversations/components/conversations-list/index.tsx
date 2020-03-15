@@ -10,7 +10,7 @@ import { Layout, List, Spinner, withStyles } from '@ui-kitten/components';
  */
 import styles from './styles';
 
-import { getConversations, hasMorePages } from '@/store/conversations/getters';
+import { getConversations, hasMorePages } from  '@/store/conversations/getters';
 import { loadMoreConversations } from '@/store/conversations/actions';
 import Conversation from '@/features/conversations/components/conversation';
 import { ConversationData } from '@/interfaces/conversations/ConversationData';

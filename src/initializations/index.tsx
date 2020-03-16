@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 /**
  * Internal dependencies.
  */
-import { init } from '@/helpers/socket';
+import { destroy, init } from '@/helpers/socket';
 import { getAuthToken } from '@/store/authentication/getters';
 
 const Initializations = ({ getAuthToken }: { getAuthToken: string }): React.ReactFragment => {
@@ -17,6 +17,8 @@ const Initializations = ({ getAuthToken }: { getAuthToken: string }): React.Reac
         }
 
         init(getAuthToken);
+
+        return destroy;
     }, [getAuthToken]);
 
     return (<></>);

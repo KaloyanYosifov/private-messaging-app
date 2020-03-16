@@ -1,8 +1,8 @@
 /**
  * External dependencies.
  */
-import axios, { AxiosInstance, Method } from 'axios';
 import get from 'lodash.get';
+import axios, { AxiosInstance, Method } from 'axios';
 import { APP_BASE_URL, APP_API_ENDPOINT } from 'react-native-dotenv';
 
 /**

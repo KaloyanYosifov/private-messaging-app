@@ -1,40 +1,75 @@
 /**
  * External dependencies.
  */
-import React, { SyntheticEvent, useCallback, useState } from 'react';
+import { connect } from 'react-redux';
 import { Controller, useForm } from 'react-hook-form';
-import { KeyboardAvoidingView, Platform, TouchableOpacity } from 'react-native';
 import { Button, Input, Layout, Text } from '@ui-kitten/components';
+import React, { SyntheticEvent, useCallback, useState } from 'react';
+import { ActivityIndicator, KeyboardAvoidingView, Platform, TouchableOpacity } from 'react-native';
 /**
  * Internal dependencies.
  */
 import styles from './styles';
+import HttpClient from '@/client';
+import { loadUserData, logIn, setAuthToken } from '@/store/authentication/actions';
 
 interface RegisterProps {
-    navigation: any
+    navigation: any,
+    logIn: Function,
+    setAuthToken: Function,
+    loadUserData: () => Promise<void>
 }
 
 interface RegisterFormData {
     name: string,
     email: string,
     password: string,
-    confirmPassword: string
+    passwordConfirmation: string
 }
 
-const Register = ({ navigation }: RegisterProps): React.ReactFragment => {
+const Register = ({ navigation, setAuthToken, logIn, loadUserData }: RegisterProps): React.ReactFragment => {
     const [loading, setLoading] = useState(false);
-    const { control, handleSubmit, errors, setError, clearError } = useForm();
+    const { control, handleSubmit, errors, setError, clearError, reset } = useForm();
 
-    const onSubmit = useCallback((data: RegisterFormData) => {
-        clearError(['name', 'email', 'password', 'confirmPassword']);
+    const onSubmit = useCallback(async (
+        {
+            name,
+            email,
+            password,
+            passwordConfirmation: password_confirmation,
+        }: RegisterFormData) => {
+        clearError(['name', 'email', 'password', 'passwordConfirmation']);
 
-        if (data.password !== data.confirmPassword) {
-            setError('confirmPassword', 'password_mismatch', 'Passwords do not match!');
+        if (loading) {
+            return;
+        }
+
+        setLoading(true);
+
+        if (password !== password_confirmation) {
+            setError('passwordConfirmation', 'password_mismatch', 'Passwords do not match!');
 
             return;
         }
 
-        console.log(data);
+        const client = new HttpClient();
+
+        try {
+            const response = await client.register({ name, email, password, password_confirmation });
+
+            setAuthToken(response.data.access_token);
+            logIn();
+
+            await loadUserData();
+
+            reset();
+
+            navigation.navigate('PagesRouter');
+        } catch (error) {
+            setError('globalErrors', 'error', 'We couldn\'t find you in our database.');
+        } finally {
+            setLoading(false);
+        }
     }, [loading]);
 
     const onChange = useCallback((events: SyntheticEvent) => events[0].nativeEvent.text, []);
@@ -99,12 +134,12 @@ const Register = ({ navigation }: RegisterProps): React.ReactFragment => {
                         <Controller
                             as={Input}
                             control={control}
-                            name="confirmPassword"
+                            name="passwordConfirmation"
                             placeholder="Enter confirmation password"
                             autoCompleteType="password"
                             textContentType="password"
-                            status={errors.confirmPassword ? 'danger' : ''}
-                            caption={errors.confirmPassword ? errors.confirmPassword.message : ''}
+                            status={errors.passwordConfirmation ? 'danger' : ''}
+                            caption={errors.passwordConfirmation ? errors.passwordConfirmation.message : ''}
                             secureTextEntry={true}
                             style={styles.lastFormInput}
                             rules={{ required: 'Confirmation password is required!' }}
@@ -112,7 +147,14 @@ const Register = ({ navigation }: RegisterProps): React.ReactFragment => {
                             defaultValue=""
                         />
 
-                        <Button style={styles.button} size="medium" onPress={handleSubmit(onSubmit)}>Register</Button>
+                        <Button
+                            style={styles.button}
+                            size="medium"
+                            icon={() => loading ? <ActivityIndicator color="#fff" /> : <React.Fragment />}>
+                            onPress={handleSubmit(onSubmit)}
+                            >
+                            Register
+                        </Button>
 
                         <TouchableOpacity onPress={() => navigation.navigate('Login')}>
                             <Text style={styles.linkText}>Already have an account?</Text>
@@ -124,4 +166,10 @@ const Register = ({ navigation }: RegisterProps): React.ReactFragment => {
     );
 };
 
-export default Register;
+const mapDispatchToProps = ({
+    logIn,
+    setAuthToken,
+    loadUserData,
+});
+
+export default connect(null, mapDispatchToProps)(Register);

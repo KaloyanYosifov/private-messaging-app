@@ -14,6 +14,7 @@ import { navigation } from '@/router';
 import { dispatch, getter } from '@/store';
 import { logOut } from '@/store/authentication/actions';
 import { getAuthToken } from '@/store/authentication/getters';
+import { RegistrationData } from '@/client/interfaces/RegistrationDataInterface';
 
 class HttpClient {
     client: AxiosInstance;
@@ -41,6 +42,10 @@ class HttpClient {
             password,
             grant_type: 'password',
         });
+    }
+
+    register(registrationData: RegistrationData) {
+        return axios.post(APP_BASE_URL + '/register', { ...registrationData });
     }
 
     get(endpoint: string, data: any = {}) {

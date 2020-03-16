@@ -1,7 +1,7 @@
 /**
  * External dependencies.
  */
-import React, { useCallback, useState } from 'react';
+import React, { SyntheticEvent, useCallback, useState } from 'react';
 import { KeyboardAvoidingView, TouchableOpacity, ActivityIndicator, Platform } from 'react-native';
 import {
     Text,
@@ -17,6 +17,7 @@ import { connect } from 'react-redux';
 import styles from './styles';
 import HttpClient from '@/client';
 import { logIn, setAuthToken, loadUserData } from '@/store/authentication/actions';
+import { Controller, useForm } from 'react-hook-form';
 
 interface LoginProps {
     navigation: any,
@@ -26,17 +27,13 @@ interface LoginProps {
 }
 
 const Login = ({ navigation, setAuthToken, logIn, loadUserData }: LoginProps): React.ReactFragment => {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+    const { control, handleSubmit, errors, setError, clearError } = useForm();
     const [loading, setLoading] = useState(false);
-    const [submitted, setSubmitted] = useState(false);
-    const [hasErrors, setHasErrors] = useState(false);
 
-    const onButtonPress = useCallback(async () => {
-        setSubmitted(true);
-        setHasErrors(false);
+    const onButtonPress = useCallback(async ({ email, password }) => {
+        clearError(['globalErrors']);
 
-        if (!email || !password || loading) {
+        if (loading) {
             return;
         }
 
@@ -54,11 +51,13 @@ const Login = ({ navigation, setAuthToken, logIn, loadUserData }: LoginProps): R
 
             navigation.navigate('PagesRouter');
         } catch (error) {
-            setHasErrors(true);
+            setError('globalErrors', 'error', 'We couldn\'t find you in our database.');
         } finally {
             setLoading(false);
         }
-    }, [email, password, loading]);
+    }, [loading]);
+
+    const onChange = useCallback((events: SyntheticEvent) => events[0].nativeEvent.text, []);
 
     return (
         <Layout style={styles.container}>
@@ -69,35 +68,41 @@ const Login = ({ navigation, setAuthToken, logIn, loadUserData }: LoginProps): R
                 >
                     <Text category="h1" style={styles.heading}>Log In</Text>
 
-                    {hasErrors && <Text style={styles.errorText} status="danger">We couldn't find you in our database.</Text>}
+                    {errors.globalErrors && <Text style={styles.errorText} status="danger">{errors.globalErrors.message}</Text>}
 
                     <Layout style={styles.formBody}>
-                        <Input
+                        <Controller
+                            as={Input}
+                            name="email"
+                            control={control}
                             placeholder="Enter email"
                             autoCompleteType="email"
                             textContentType="emailAddress"
                             autoCapitalize="none"
-                            status={submitted && !email ? 'danger' : ''}
-                            caption={submitted && !email ? 'Email is required' : ''}
+                            status={errors.email ? 'danger' : ''}
+                            caption={errors.email ? errors.email.message : ''}
                             style={styles.formInput}
-                            value={email}
-                            onChangeText={setEmail}
+                            rules={{ required: 'Email is required!' }}
+                            onChange={onChange}
                         />
 
-                        <Input
+                        <Controller
+                            as={Input}
+                            name="password"
+                            control={control}
                             placeholder="Enter password"
                             autoCompleteType="password"
                             textContentType="password"
                             autoCapitalize="none"
-                            status={submitted && !password ? 'danger' : ''}
-                            caption={submitted && !password ? 'Password is required' : ''}
+                            status={errors.password ? 'danger' : ''}
+                            caption={errors.password ? errors.password.message : ''}
                             secureTextEntry={true}
                             style={styles.lastFormInput}
-                            value={password}
-                            onChangeText={setPassword}
+                            rules={{ required: 'Password is required!' }}
+                            onChange={onChange}
                         />
 
-                        <Button onPress={onButtonPress}
+                        <Button onPress={handleSubmit(onButtonPress)}
                             style={styles.button}
                             size="medium"
                             icon={() => loading ? <ActivityIndicator color="#fff" /> : <React.Fragment />}>

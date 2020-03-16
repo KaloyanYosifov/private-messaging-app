@@ -27,7 +27,7 @@ interface LoginProps {
 }
 
 const Login = ({ navigation, setAuthToken, logIn, loadUserData }: LoginProps): React.ReactFragment => {
-    const { control, handleSubmit, errors, setError, clearError } = useForm();
+    const { control, handleSubmit, errors, setError, clearError, reset } = useForm();
     const [loading, setLoading] = useState(false);
 
     const onButtonPress = useCallback(async ({ email, password }) => {
@@ -48,6 +48,8 @@ const Login = ({ navigation, setAuthToken, logIn, loadUserData }: LoginProps): R
             logIn();
 
             await loadUserData();
+
+            reset();
 
             navigation.navigate('PagesRouter');
         } catch (error) {

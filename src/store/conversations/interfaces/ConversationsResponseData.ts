@@ -3,7 +3,7 @@
  */
 import { ConversationData } from '@/interfaces/conversations/ConversationData';
 
-export interface LoadMoreConversationsRequestData {
+export interface ConversationsResponseData {
     data: ConversationData[],
     has_more_pages: boolean
 }

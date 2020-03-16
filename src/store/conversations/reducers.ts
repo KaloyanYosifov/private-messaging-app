@@ -10,7 +10,7 @@ import Types from '@/store/conversations/types';
 
 import { createReducer } from '@/helpers';
 import { StateModel } from '@/store/conversations/models/state.model';
-import ActionsModel, { PaginateAction } from '@/store/conversations/models/actions.model';
+import ActionsModel, { PaginateAction, RestartPaginationAction } from '@/store/conversations/models/actions.model';
 
 const initialState: StateModel = {
     conversations: [],
@@ -23,6 +23,12 @@ const reducers = {
         ...state,
         conversations: [...state.conversations, ...payload.data],
         currentPage: state.currentPage + 1,
+        hasMorePages: payload.has_more_pages,
+    }),
+    [Types.RESTART_CONVERSATIONS]: (state: StateModel, { payload }: RestartPaginationAction) => ({
+        ...state,
+        conversations: [...payload.data],
+        currentPage: 1,
         hasMorePages: payload.has_more_pages,
     }),
     [Types.RESET_CONVERSATIONS]: () => cloneDeep(initialState),

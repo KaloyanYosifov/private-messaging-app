@@ -11,7 +11,7 @@ import { Layout, List, Spinner, withStyles } from '@ui-kitten/components';
 import styles from './styles';
 
 import { getConversations, hasMorePages } from '@/store/conversations/getters';
-import { loadMoreConversations } from '@/store/conversations/actions';
+import { loadMoreConversations, restartConversations } from '@/store/conversations/actions';
 import Conversation from '@/features/conversations/components/conversation';
 import { ConversationData } from '@/interfaces/conversations/ConversationData';
 
@@ -19,6 +19,7 @@ interface ConversationListProps {
     hasMorePages: boolean,
     getConversations: ConversationData[],
     loadMoreConversations: () => Promise<void>,
+    restartConversations: () => Promise<void>,
     themedStyle: { list: object }
 }
 
@@ -26,10 +27,12 @@ const ConversationsList = ({
     hasMorePages,
     getConversations,
     loadMoreConversations,
+    restartConversations,
     themedStyle,
 }: ConversationListProps): any => {
-    const [loading, setLoading] = useState<boolean>(false);
-    const [firstLoad, setFirstLoad] = useState<boolean>(true);
+    const [refreshing, setRefreshing] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [firstLoad, setFirstLoad] = useState(true);
 
     const loadMore = useCallback(() => {
         if (loading || !hasMorePages) {
@@ -44,6 +47,17 @@ const ConversationsList = ({
                 setFirstLoad(false);
             });
     }, [loading, hasMorePages]);
+
+    const onRefresh = useCallback(() => {
+        if (refreshing) {
+            return;
+        }
+
+        setRefreshing(true);
+
+        restartConversations()
+            .finally(() => setRefreshing(false));
+    }, [refreshing]);
 
     useEffect(() => {
         loadMore();
@@ -60,6 +74,8 @@ const ConversationsList = ({
 
         return (<List
             style={themedStyle.list}
+            onRefresh={onRefresh}
+            refreshing={refreshing}
             onEndReached={loadMore}
             onEndReachedThreshold={0.2}
             data={getConversations}
@@ -84,6 +100,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = {
+    restartConversations,
     loadMoreConversations,
 };
 

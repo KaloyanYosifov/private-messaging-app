@@ -25,7 +25,7 @@ const TopNavigationMenu = ({ logOut, menuData }: TopNavigationMenuProps): React.
         title: 'Logout',
         action: () => {
             logOut();
-            navigation().dispatch(StackActions.popToTop);
+            navigation().navigate('Dashboard');
             navigation().navigate('AuthRouter');
         },
         icon: (style: StyleType) => <Icon {...style} name="log-out" />,

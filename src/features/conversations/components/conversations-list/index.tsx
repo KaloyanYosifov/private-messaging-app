@@ -10,7 +10,7 @@ import { Layout, List, Spinner, withStyles } from '@ui-kitten/components';
  */
 import styles from './styles';
 
-import { getConversations, hasMorePages } from  '@/store/conversations/getters';
+import { getConversations, hasMorePages } from '@/store/conversations/getters';
 import { loadMoreConversations } from '@/store/conversations/actions';
 import Conversation from '@/features/conversations/components/conversation';
 import { ConversationData } from '@/interfaces/conversations/ConversationData';
@@ -60,8 +60,8 @@ const ConversationsList = ({
 
         return (<List
             style={themedStyle.list}
-            onRefresh={loadMore}
-            refreshing={loading}
+            onEndReached={loadMore}
+            onEndReachedThreshold={0.2}
             data={getConversations}
             renderItem={({ item }) => <Conversation conversation={item} />}
         />);

@@ -1,6 +1,7 @@
 /**
  * External dependencies.
  */
+import get from 'lodash.get';
 import { connect } from 'react-redux';
 import { Controller, useForm } from 'react-hook-form';
 import { Button, Input, Layout, Text } from '@ui-kitten/components';
@@ -38,6 +39,12 @@ const Register = ({ navigation, setAuthToken, logIn, loadUserData }: RegisterPro
             password,
             passwordConfirmation: password_confirmation,
         }: RegisterFormData) => {
+        if (password !== password_confirmation) {
+            setError('passwordConfirmation', 'password_mismatch', 'Passwords do not match!');
+
+            return;
+        }
+
         clearError(['name', 'email', 'password', 'passwordConfirmation']);
 
         if (loading) {
@@ -45,12 +52,6 @@ const Register = ({ navigation, setAuthToken, logIn, loadUserData }: RegisterPro
         }
 
         setLoading(true);
-
-        if (password !== password_confirmation) {
-            setError('passwordConfirmation', 'password_mismatch', 'Passwords do not match!');
-
-            return;
-        }
 
         const client = new HttpClient();
 
@@ -66,7 +67,7 @@ const Register = ({ navigation, setAuthToken, logIn, loadUserData }: RegisterPro
 
             navigation.navigate('PagesRouter');
         } catch (error) {
-            setError('globalErrors', 'error', 'We couldn\'t find you in our database.');
+            setError('globalErrors', 'error', get(error, 'response.data.message'));
         } finally {
             setLoading(false);
         }
@@ -82,6 +83,8 @@ const Register = ({ navigation, setAuthToken, logIn, loadUserData }: RegisterPro
                     keyboardVerticalOffset={Platform.select({ ios: 80, android: 200 })}
                 >
                     <Text category="h1" style={styles.heading}>Register</Text>
+
+                    {errors.globalErrors && <Text style={styles.errorText} status="danger">{errors.globalErrors.message}</Text>}
 
                     <Layout style={styles.formBody}>
                         <Controller
@@ -150,9 +153,9 @@ const Register = ({ navigation, setAuthToken, logIn, loadUserData }: RegisterPro
                         <Button
                             style={styles.button}
                             size="medium"
-                            icon={() => loading ? <ActivityIndicator color="#fff" /> : <React.Fragment />}>
+                            icon={() => loading ? <ActivityIndicator color="#fff" /> : <React.Fragment />}
                             onPress={handleSubmit(onSubmit)}
-                            >
+                        >
                             Register
                         </Button>
 

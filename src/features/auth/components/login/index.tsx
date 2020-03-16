@@ -1,7 +1,7 @@
 /**
  * External dependencies.
  */
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { KeyboardAvoidingView, TouchableOpacity, ActivityIndicator, Platform } from 'react-native';
 import {
     Text,
@@ -32,7 +32,7 @@ const Login = ({ navigation, setAuthToken, logIn, loadUserData }: LoginProps): R
     const [submitted, setSubmitted] = useState(false);
     const [hasErrors, setHasErrors] = useState(false);
 
-    const onButtonPress = async () => {
+    const onButtonPress = useCallback(async () => {
         setSubmitted(true);
         setHasErrors(false);
 
@@ -58,7 +58,7 @@ const Login = ({ navigation, setAuthToken, logIn, loadUserData }: LoginProps): R
         } finally {
             setLoading(false);
         }
-    };
+    }, [email, password, loading]);
 
     return (
         <Layout style={styles.container}>

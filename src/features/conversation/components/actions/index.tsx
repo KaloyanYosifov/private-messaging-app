@@ -2,6 +2,7 @@
  * External dependencies.
  */
 import React from 'react';
+import {AudioRecorder, AudioUtils} from 'react-native-audio';
 import { TouchableOpacity, View } from 'react-native';
 import { Icon, withStyles } from '@ui-kitten/components';
 

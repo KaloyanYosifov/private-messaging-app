@@ -13,12 +13,12 @@ export default StyleSheet.create({
         paddingTop: verticalScale(7),
         lineHeight: 16,
         marginTop: Platform.select({
-            ios: 6,
+            ios: verticalScale(6),
             android: 0,
         }),
         marginBottom: Platform.select({
-            ios: 5,
-            android: 3,
+            ios: verticalScale(5),
+            android: verticalScale(3),
         }),
     },
 });

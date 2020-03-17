@@ -1,7 +1,7 @@
 /**
  * External dependencies.
  */
-import React, { useCallback } from 'react';
+import React, { useCallback, useRef } from 'react';
 import { connect } from 'react-redux';
 import { Layout, Spinner } from '@ui-kitten/components';
 import { GiftedChat, IMessage } from 'react-native-gifted-chat';
@@ -34,12 +34,19 @@ const messageClient = new Messages();
 const Conversation = ({ route, getUserData }: ConversationProps): React.ReactFragment => {
     const userName = route.params.userName;
     const conversationId = route.params.conversationId;
+    const chatRef = useRef(null);
     const [state, setMessages, loadMessages] = useChatMessages(conversationId);
-    const onReceivedMessage = (messages: MessageData[]) => {
+    const onReceivedMessage = useCallback((messages: MessageData[]) => {
         setMessages(
             (previousMessages) => GiftedChat.prepend(previousMessages, convertMessagesToIMessages(messages)),
         );
-    };
+
+        if (chatRef.current) {
+            setTimeout(() => {
+                chatRef.current.scrollToBottom();
+            }, 50);
+        }
+    }, [chatRef.current, setMessages]);
     const [typing, onTextChange] = useMessagingSocket(`conversation.message.created.${conversationId}`, getUserData.id, onReceivedMessage);
 
     const onSend = useCallback((newMessages: IMessage[], scrollToBottom: () => void) => {
@@ -71,6 +78,7 @@ const Conversation = ({ route, getUserData }: ConversationProps): React.ReactFra
                         :
                         (<>
                             <Chat
+                                ref={chatRef}
                                 listViewProps={{ onRefresh, refreshing: state.loading }}
                                 inverted={false}
                                 scrollToBottom={false}

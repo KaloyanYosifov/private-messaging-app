@@ -68,7 +68,7 @@ export const useMessagingSocket = (
                 if (message.user.id === currentUserId) {
                     return;
                 }
-
+                
                 onReceivedMessages([message]);
             });
 

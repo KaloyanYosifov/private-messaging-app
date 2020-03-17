@@ -62,7 +62,7 @@ const Conversation = ({ route, getUserData }: ConversationProps): React.ReactFra
         }
 
         loadMessages();
-    }, [state.hasMorePages, loadMessages]);
+    }, [loadMessages, state.hasMorePages]);
 
     const isLoading = state.loading && !state.firstLoading;
 

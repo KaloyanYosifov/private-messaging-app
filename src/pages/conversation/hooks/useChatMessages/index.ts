@@ -65,7 +65,7 @@ const messagesReducer = (state: StateModel, action): any => {
     if (action.type === SET_PAGE) {
         return {
             ...state,
-            page: action.payload,
+            currentPage: action.payload,
         };
     }
 
@@ -128,7 +128,7 @@ export const useChatMessages = (conversationId: number, initialMessages: IMessag
                     payload: state.currentPage + 1,
                 });
             });
-    }, [dispatch]);
+    }, [state.currentPage, dispatch]);
 
     useEffect(() => {
         loadMessages();

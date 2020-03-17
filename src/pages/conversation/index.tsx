@@ -1,7 +1,7 @@
 /**
  * External dependencies.
  */
-import React, { SyntheticEvent, useCallback, useRef, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { Layout, Spinner } from '@ui-kitten/components';
 import { GiftedChat, IMessage } from 'react-native-gifted-chat';
@@ -19,8 +19,7 @@ import TopNavigation from '@/features/conversation/components/top-navigation';
 import TypingIndicator from '@/components/typing-indicator';
 import { MessageData } from '@/interfaces/messaging/MessageData';
 import { convertMessagesToIMessages } from '@/pages/conversation/utils';
-import SendButton from '@/features/conversation/components/send-button';
-import TextField from '@/features/conversation/components/text-field';
+import InputToolbar from '@/features/conversation/components/input-toolbar';
 
 interface ConversationProps {
     route: any,
@@ -107,8 +106,7 @@ const Conversation = ({ route, getUserData }: ConversationProps): React.ReactFra
                                 renderLoading={renderLoading}
                                 onInputTextChanged={onTextChange}
                                 renderChatFooter={() => (<TypingIndicator isTyping={typing} />)}
-                                renderComposer={(props) => <TextField {...props} />}
-                                renderSend={(props) => <SendButton {...props} />}
+                                renderInputToolbar={(props) => <InputToolbar {...props} />}
                                 user={{
                                     _id: getUserData.id,
                                 }}

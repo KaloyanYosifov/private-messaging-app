@@ -2,15 +2,15 @@
  * External dependencies.
  */
 import React from 'react';
-import { Platform, TextInput, TextInputProps } from 'react-native';
+import { TextInputProps } from 'react-native';
 import { Input } from '@ui-kitten/components';
-
 /**
  * Internal dependencies.
  */
 import styles from './styles';
+import { MIN_COMPOSER_HEIGHT } from '@/features/conversation/constants';
 
-export interface ComposerProps {
+interface ComposerProps {
     composerHeight?: number
     text?: string
     placeholder?: string
@@ -26,9 +26,9 @@ export interface ComposerProps {
     onInputSizeChanged?(contentSize: { width: number; height: number }): void
 }
 
-export default class TextField extends React.Component<ComposerProps, any> {
+class TextField extends React.Component<ComposerProps, any> {
     static defaultProps = {
-        composerHeight: 33,
+        composerHeight: MIN_COMPOSER_HEIGHT,
         text: '',
         placeholder: '',
         textInputProps: null,
@@ -95,3 +95,5 @@ export default class TextField extends React.Component<ComposerProps, any> {
         );
     }
 }
+
+export default TextField;

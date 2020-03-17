@@ -10,6 +10,7 @@ import { EmitterSubscription, Keyboard } from 'react-native';
 import styles from './styles';
 import SendButton from '@/features/conversation/components/send-button';
 import TextField from '@/features/conversation/components/text-field';
+import Actions from '@/features/conversation/components/actions';
 
 interface InputToolbarProps {
     options?: { [key: string]: any }
@@ -64,14 +65,6 @@ class InputToolbar extends React.Component<InputToolbarProps, InputToolbarState>
         }
     };
 
-    renderSend() {
-        return <SendButton {...this.props} />;
-    }
-
-    renderTextField() {
-        return <TextField {...this.props} />;
-    }
-
     render() {
         const textFieldContainerThemedStyle = this.state.keyboardIsShown ? 'textFieldContainerKeyboardShown' : 'textFieldContainer';
         return (
@@ -79,8 +72,9 @@ class InputToolbar extends React.Component<InputToolbarProps, InputToolbarState>
                 style={[styles.container, this.props.themedStyle.container, { position: this.state.keyboardIsShown ? 'relative' : 'absolute' }]}
             >
                 <Layout style={[styles.textFieldContainer, this.props.themedStyle[textFieldContainerThemedStyle]]}>
-                    {this.renderTextField()}
-                    {this.renderSend()}
+                    <Actions />
+                    <TextField {...this.props} />
+                    <SendButton {...this.props} />
                 </Layout>
             </Layout>
         );

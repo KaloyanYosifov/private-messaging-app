@@ -28,7 +28,7 @@ const SendButton = (props: any): React.FunctionComponent => {
 
 const ThemedSendButton = withStyles(SendButton as React.FunctionComponent, theme => ({
     icon: {
-        color: theme['color-primary-100'],
+        color: theme['color-primary-300'],
     },
 }));
 

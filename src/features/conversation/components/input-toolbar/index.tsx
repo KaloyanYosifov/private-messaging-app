@@ -2,8 +2,8 @@
  * External dependencies.
  */
 import React from 'react';
-import { Layout } from '@ui-kitten/components';
-import { EmitterSubscription, Keyboard, View } from 'react-native';
+import { Layout, withStyles } from '@ui-kitten/components';
+import { EmitterSubscription, Keyboard } from 'react-native';
 /**
  * Internal dependencies.
  */
@@ -17,12 +17,12 @@ interface InputToolbarProps {
 }
 
 interface InputToolbarState {
-    position: string
+    keyboardIsShown: boolean
 }
 
 class InputToolbar extends React.Component<InputToolbarProps, InputToolbarState> {
     state = {
-        position: 'absolute',
+        keyboardIsShown: false,
     };
 
     keyboardWillShowListener?: EmitterSubscription = undefined;
@@ -49,17 +49,17 @@ class InputToolbar extends React.Component<InputToolbarProps, InputToolbarState>
     }
 
     keyboardWillShow = () => {
-        if (this.state.position !== 'relative') {
+        if (!this.state.keyboardIsShown) {
             this.setState({
-                position: 'relative',
+                keyboardIsShown: true,
             });
         }
     };
 
     keyboardWillHide = () => {
-        if (this.state.position !== 'absolute') {
+        if (this.state.keyboardIsShown) {
             this.setState({
-                position: 'absolute',
+                keyboardIsShown: false,
             });
         }
     };
@@ -73,11 +73,12 @@ class InputToolbar extends React.Component<InputToolbarProps, InputToolbarState>
     }
 
     render() {
+        const textFieldContainerThemedStyle = this.state.keyboardIsShown ? 'textFieldContainerKeyboardShown' : 'textFieldContainer';
         return (
             <Layout
-                style={[styles.container, { position: this.state.position }]}
+                style={[styles.container, this.props.themedStyle.container, { position: this.state.keyboardIsShown ? 'relative' : 'absolute' }]}
             >
-                <Layout>
+                <Layout style={[styles.textFieldContainer, this.props.themedStyle[textFieldContainerThemedStyle]]}>
                     {this.renderTextField()}
                     {this.renderSend()}
                 </Layout>
@@ -86,4 +87,16 @@ class InputToolbar extends React.Component<InputToolbarProps, InputToolbarState>
     }
 }
 
-export default InputToolbar;
+const ThemedInputToolbar = withStyles(InputToolbar, (theme) => ({
+    container: {
+        borderTopColor: theme['color-basic-1000'],
+    },
+    textFieldContainer: {
+        backgroundColor: theme['background-basic-color-2'],
+    },
+    textFieldContainerKeyboardShown: {
+        backgroundColor: theme['background-basic-color-1'],
+    },
+}));
+
+export default ThemedInputToolbar;

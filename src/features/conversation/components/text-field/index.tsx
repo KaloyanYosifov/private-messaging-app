@@ -11,11 +11,9 @@ import styles from './styles';
 import { MIN_COMPOSER_HEIGHT } from '@/features/conversation/constants';
 
 interface ComposerProps {
-    composerHeight?: number
     text?: string
     placeholder?: string
     textInputProps?: Partial<TextInputProps>
-    textInputStyle?: TextInputProps['style']
     textInputAutoFocus?: boolean
     keyboardAppearance?: TextInputProps['keyboardAppearance']
     multiline?: boolean
@@ -28,13 +26,11 @@ interface ComposerProps {
 
 class TextField extends React.Component<ComposerProps, any> {
     static defaultProps = {
-        composerHeight: MIN_COMPOSER_HEIGHT,
         text: '',
         placeholder: '',
         textInputProps: null,
         multiline: true,
         disableComposer: false,
-        textInputStyle: {},
         textInputAutoFocus: false,
         keyboardAppearance: 'default',
         onTextChanged: () => {},
@@ -82,7 +78,7 @@ class TextField extends React.Component<ComposerProps, any> {
                     styles.textInput,
                     this.props.textInputStyle,
                     {
-                        height: this.props.composerHeight,
+                        height: MIN_COMPOSER_HEIGHT,
                     },
                 ]}
                 autoFocus={this.props.textInputAutoFocus}

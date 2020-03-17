@@ -53,5 +53,7 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>NSMicrophoneUsageDescription</key>
+    <string>The microphone is required, so we we can record your audio and send it to a user.</string>
 </dict>
 </plist>

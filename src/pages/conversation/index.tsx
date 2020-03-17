@@ -11,14 +11,15 @@ import { GiftedChat, IMessage } from 'react-native-gifted-chat';
 import styles from './styles';
 
 import Chat from '@/components/chat';
+import Messages from '@/client/messages';
 import { UserData } from '@/interfaces/UserData';
 import { getUserData } from '@/store/authentication/getters';
 import { useChatMessages, useMessagingSocket } from '@/pages/conversation/hooks';
 import TopNavigation from '@/features/conversation/components/top-navigation';
-import Messages from '@/client/messages';
 import TypingIndicator from '@/components/typing-indicator';
 import { MessageData } from '@/interfaces/messaging/MessageData';
 import { convertMessagesToIMessages } from '@/pages/conversation/utils';
+import SendButton from '@/features/conversation/components/send-button';
 
 interface ConversationProps {
     route: any,
@@ -105,6 +106,7 @@ const Conversation = ({ route, getUserData }: ConversationProps): React.ReactFra
                                 renderLoading={renderLoading}
                                 onInputTextChanged={onTextChange}
                                 renderChatFooter={() => (<TypingIndicator isTyping={typing} />)}
+                                renderSend={(props) => <SendButton {...props} />}
                                 user={{
                                     _id: getUserData.id,
                                 }}

@@ -2,8 +2,8 @@
  * External dependencies.
  */
 import React from 'react';
-import { TextInputProps } from 'react-native';
-import { Input } from '@ui-kitten/components';
+import { withStyles } from '@ui-kitten/components';
+import { TextInput, TextInputProps } from 'react-native';
 /**
  * Internal dependencies.
  */
@@ -11,9 +11,11 @@ import styles from './styles';
 import { MIN_COMPOSER_HEIGHT } from '@/features/conversation/constants';
 
 interface ComposerProps {
+    composerHeight?: number
     text?: string
     placeholder?: string
     textInputProps?: Partial<TextInputProps>
+    textInputStyle?: TextInputProps['style']
     textInputAutoFocus?: boolean
     keyboardAppearance?: TextInputProps['keyboardAppearance']
     multiline?: boolean
@@ -26,11 +28,13 @@ interface ComposerProps {
 
 class TextField extends React.Component<ComposerProps, any> {
     static defaultProps = {
+        composerHeight: MIN_COMPOSER_HEIGHT,
         text: '',
         placeholder: '',
         textInputProps: null,
         multiline: true,
         disableComposer: false,
+        textInputStyle: {},
         textInputAutoFocus: false,
         keyboardAppearance: 'default',
         onTextChanged: () => {},
@@ -64,21 +68,23 @@ class TextField extends React.Component<ComposerProps, any> {
 
     render() {
         return (
-            <Input
+            <TextInput
                 testID={this.props.placeholder}
                 accessible
                 accessibilityLabel={this.props.placeholder}
                 placeholder={this.props.placeholder}
                 multiline={this.props.multiline}
                 editable={!(this.props.disableComposer)}
+                placeholderTextColor={this.props.themedStyle.placeholder.color}
                 onChange={this.onContentSizeChange}
                 onContentSizeChange={this.onContentSizeChange}
                 onChangeText={this.onChangeText}
                 style={[
                     styles.textInput,
+                    this.props.themedStyle.textInput,
                     this.props.textInputStyle,
                     {
-                        height: MIN_COMPOSER_HEIGHT,
+                        height: this.props.composerHeight,
                     },
                 ]}
                 autoFocus={this.props.textInputAutoFocus}
@@ -92,4 +98,13 @@ class TextField extends React.Component<ComposerProps, any> {
     }
 }
 
-export default TextField;
+const ThemedTextField = withStyles(TextField as React.ComponentType<ComposerProps>, theme => ({
+    textInput: {
+        color: theme['color-primary-100'],
+    },
+    placeholder: {
+        color: theme['color-primary-200'],
+    },
+}));
+
+export default ThemedTextField;

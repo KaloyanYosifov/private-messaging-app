@@ -20,6 +20,7 @@ import TypingIndicator from '@/components/typing-indicator';
 import { MessageData } from '@/interfaces/messaging/MessageData';
 import { convertMessagesToIMessages } from '@/pages/conversation/utils';
 import SendButton from '@/features/conversation/components/send-button';
+import TextField from '@/features/conversation/components/text-field';
 
 interface ConversationProps {
     route: any,
@@ -106,6 +107,7 @@ const Conversation = ({ route, getUserData }: ConversationProps): React.ReactFra
                                 renderLoading={renderLoading}
                                 onInputTextChanged={onTextChange}
                                 renderChatFooter={() => (<TypingIndicator isTyping={typing} />)}
+                                renderComposer={(props) => <TextField {...props} />}
                                 renderSend={(props) => <SendButton {...props} />}
                                 user={{
                                     _id: getUserData.id,

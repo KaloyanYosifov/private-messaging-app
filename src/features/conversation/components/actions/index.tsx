@@ -1,7 +1,7 @@
 /**
  * External dependencies.
  */
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { TouchableOpacity, View } from 'react-native';
 import { Icon, withStyles } from '@ui-kitten/components';
 
@@ -15,17 +15,26 @@ import SoundPlayer from '@/utils/sound-player/SoundPlayer';
 const soundPlayer = new SoundPlayer();
 
 const Actions = ({ themedStyle }): React.FunctionComponent => {
-    const onPress = useCallback(() => {
+    useEffect(() => {
+        const onFinish = (path: string) => {
+            void soundPlayer.play(path);
+        };
+
+        Recorder.addOnFinishedCallback(onFinish);
+
+        return () => {
+            Recorder.removeOnFinishedCallback(onFinish);
+        };
+    }, []);
+
+    const onPress = useCallback(async () => {
         if (Recorder.isRecording()) {
-            void Recorder.stop();
+            await Recorder.stop();
 
             return;
         }
 
-        Recorder.record('my-space')
-            .then((data) => {
-                void soundPlayer.play(data.audioFileURL);
-            });
+        await Recorder.record('my-space');
     }, []);
 
     return (

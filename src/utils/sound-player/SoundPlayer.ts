@@ -20,7 +20,7 @@ class SoundPlayer {
                 }
 
                 if (error) {
-                    reject();
+                    reject(error);
                     return;
                 }
 

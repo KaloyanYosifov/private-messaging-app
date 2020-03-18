@@ -11,7 +11,7 @@ import { GiftedChat, IMessage } from 'react-native-gifted-chat';
 import styles from './styles';
 
 import Chat from '@/components/chat';
-import Messages from '@/client/messages';
+import MessagesClient from '@/client/messages-client';
 import { UserData } from '@/interfaces/UserData';
 import { getUserData } from '@/store/authentication/getters';
 import { useChatMessages, useMessagingSocket } from '@/pages/conversation/hooks';
@@ -30,7 +30,11 @@ const renderLoading = () => (
     <Layout style={[styles.container, styles.isLoading]}><Spinner size="giant" /></Layout>
 );
 
-const messageClient = new Messages();
+const messageClient = new MessagesClient();
+
+interface EnhancedIMessage extends IMessage {
+    audioPath: string
+}
 
 const Conversation = ({ route, getUserData }: ConversationProps): React.ReactFragment => {
     const userName = route.params.userName;
@@ -55,11 +59,17 @@ const Conversation = ({ route, getUserData }: ConversationProps): React.ReactFra
     }, [canScroll, chatRef.current, setMessages]);
     const [typing, onTextChange] = useMessagingSocket(`conversation.message.created.${conversationId}`, getUserData.id, onReceivedMessage);
 
-    const onSend = useCallback((newMessages: IMessage[], scrollToBottom: () => void) => {
+    const onSend = useCallback((newMessages: EnhancedIMessage[], scrollToBottom: () => void) => {
         setMessages((previousMessages) => GiftedChat.prepend(previousMessages, newMessages));
         setTimeout(() => { scrollToBottom(); }, 100);
 
-        messageClient.send(newMessages[0].text, conversationId);
+        if (newMessages[0].audioPath) {
+            void messageClient.uploadAudio(newMessages[0].audioPath, conversationId);
+        }
+
+        if (newMessages[0].text) {
+            void messageClient.send(newMessages[0].text, conversationId);
+        }
     }, [setMessages]);
 
     const onRefresh = useCallback(() => {

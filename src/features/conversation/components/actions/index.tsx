@@ -14,10 +14,20 @@ import SoundPlayer from '@/utils/sound-player/SoundPlayer';
 
 const soundPlayer = new SoundPlayer();
 
-const Actions = ({ themedStyle, onSend }): React.FunctionComponent => {
+interface ActionProps {
+    themedStyle: {
+        icon: {
+            color: string
+        }
+    },
+    onSend: (data: any) => void;
+}
+
+const Actions = ({ themedStyle, onSend }: ActionProps): React.FunctionComponent => {
     useEffect(() => {
         const onFinish = (path: string) => {
             void soundPlayer.play(path);
+            onSend({ audioPath: path });
         };
 
         Recorder.addOnFinishedCallback(onFinish);

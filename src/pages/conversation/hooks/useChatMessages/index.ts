@@ -7,7 +7,7 @@ import { GiftedChat, IMessage } from 'react-native-gifted-chat';
 /**
  * Internal dependencies.
  */
-import Messages from '@/client/messages';
+import MessagesClient from '@/client/messages-client';
 import { convertMessagesToIMessages } from '@/pages/conversation/utils';
 import {
     SET_PAGE,
@@ -72,7 +72,7 @@ const messagesReducer = (state: StateModel, action): any => {
     return state;
 };
 
-const messagesClient = new Messages();
+const messagesClient = new MessagesClient();
 
 export const useChatMessages = (conversationId: number, initialMessages: IMessage[] = []) => {
     // do not get scared of the error

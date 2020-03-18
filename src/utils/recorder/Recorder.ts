@@ -1,20 +1,15 @@
 /**
  * External dependencies.
  */
-import { AudioRecorder, AudioUtils } from 'react-native-audio';
-
-/**
- * Internal dependencies.
- */
-import { RecorderFinishedData } from '@/utils/recorder/interfaces/RecorderFinishedData';
 import { Platform } from 'react-native';
+import { AudioRecorder, AudioUtils } from 'react-native-audio';
 
 class Recorder {
     protected recording: boolean = false;
     protected finishedCallbacks: Array<(path: string) => void> = [];
 
     async record(name: string) {
-        const path = `${AudioUtils.DocumentDirectoryPath}/${name}.aac`;
+        const path = `${AudioUtils.DocumentDirectoryPath}/${name}.${this.extension}`;
 
         if (this.recording) {
             await this.stop();
@@ -64,6 +59,14 @@ class Recorder {
 
     removeOnFinishedCallback(callback: (path: string) => void) {
         this.finishedCallbacks = this.finishedCallbacks.filter(finishedCallback => finishedCallback !== callback);
+    }
+
+    get extension() {
+        return 'aac';
+    }
+
+    get formatType() {
+        return 'audio/acc';
     }
 
     protected finished(path: string) {

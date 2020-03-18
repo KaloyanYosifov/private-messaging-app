@@ -2,6 +2,7 @@
  * External dependencies.
  */
 import get from 'lodash.get';
+import FileSystem, { UploadFileItem } from 'react-native-fs';
 import axios, { AxiosInstance, Method } from 'axios';
 import { APP_BASE_URL, APP_API_ENDPOINT } from 'react-native-dotenv';
 
@@ -66,6 +67,32 @@ class HttpClient {
 
     delete(endpoint: string, data: any = {}) {
         return this.makeRequest('delete', endpoint, data);
+    }
+
+    upload(endpoint: string, file: UploadFileItem, data: any = {}) {
+        let headers = {};
+
+        const authToken = getter(getAuthToken);
+
+        if (authToken) {
+            headers = {
+                Authorization: `Bearer ${authToken}`,
+            };
+        }
+
+        return FileSystem.uploadFiles({
+            toUrl: APP_BASE_URL + APP_API_ENDPOINT + endpoint,
+            files: [file],
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                ...headers,
+            },
+            fields: {
+                _method: 'put',
+                ...data,
+            },
+        }).promise;
     }
 
     makeRequest(method: Method, endpoint: string, data: any = {}) {

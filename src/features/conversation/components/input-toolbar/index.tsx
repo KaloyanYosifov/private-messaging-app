@@ -72,7 +72,7 @@ class InputToolbar extends React.Component<InputToolbarProps, InputToolbarState>
                 style={[styles.container, this.props.themedStyle.container, { position: this.state.keyboardIsShown ? 'relative' : 'absolute' }]}
             >
                 <Layout style={[styles.textFieldContainer, this.props.themedStyle[textFieldContainerThemedStyle]]}>
-                    <Actions />
+                    <Actions {...this.props} />
                     <TextField {...this.props} />
                     <SendButton {...this.props} />
                 </Layout>

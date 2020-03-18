@@ -2,7 +2,7 @@
  * External dependencies.
  */
 import get from 'lodash.get';
-import FileSystem, { UploadFileItem } from 'react-native-fs';
+import RNFetchBlob from 'rn-fetch-blob';
 import axios, { AxiosInstance, Method } from 'axios';
 import { APP_BASE_URL, APP_API_ENDPOINT } from 'react-native-dotenv';
 
@@ -16,6 +16,7 @@ import { dispatch, getter } from '@/store';
 import { logOut } from '@/store/authentication/actions';
 import { getAuthToken } from '@/store/authentication/getters';
 import { RegistrationData } from './interfaces/RegistrationData';
+import { FileInfo } from '@/client/interfaces/FileInfo';
 
 class HttpClient {
     client: AxiosInstance;
@@ -69,30 +70,48 @@ class HttpClient {
         return this.makeRequest('delete', endpoint, data);
     }
 
-    upload(endpoint: string, file: UploadFileItem, data: any = {}) {
-        let headers = {};
+    upload(endpoint: string, file: FileInfo, data: any = {}) {
+        const filePath = file.path.replace(/file:\/\/\//, '');
+
+        let headers: { 'Content-Type': string, Authorization?: string } = {
+            'Content-Type': 'application/octet-stream',
+        };
 
         const authToken = getter(getAuthToken);
 
         if (authToken) {
             headers = {
+                ...headers,
                 Authorization: `Bearer ${authToken}`,
             };
         }
+        const requestData: { name: string, data: any, filename?: string, type?: string }[] = [
+            {
+                name: 'audio_file',
+                type: file.filetype,
+                filename: file.filename,
+                data: RNFetchBlob.wrap(filePath),
+            },
+        ];
 
-        return FileSystem.uploadFiles({
-            toUrl: APP_BASE_URL + APP_API_ENDPOINT + endpoint,
-            files: [file],
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                ...headers,
-            },
-            fields: {
-                _method: 'put',
-                ...data,
-            },
-        }).promise;
+        for (const [key, value] of Object.entries(data)) {
+            requestData.push({
+                name: key,
+                data: value,
+            });
+        }
+
+        return RNFetchBlob.fetch(
+            'POST',
+            APP_BASE_URL + APP_API_ENDPOINT + endpoint,
+            headers,
+            requestData,
+        )
+            .then(response => {
+                console.log(response);
+
+                return response;
+            });
     }
 
     makeRequest(method: Method, endpoint: string, data: any = {}) {

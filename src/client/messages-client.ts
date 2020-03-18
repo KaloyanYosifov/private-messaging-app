@@ -2,7 +2,7 @@
  * External dependencies.
  */
 import { UploadFileItem } from 'react-native-fs';
-import uuid from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 
 /**
  * Internal dependencies.
@@ -10,6 +10,7 @@ import uuid from 'uuid';
 import HttpClient from '@/client/index';
 import Recorder from '@/utils/recorder/Recorder';
 import { MessageData } from '@/interfaces/messaging/MessageData';
+import { FileInfo } from '@/client/interfaces/FileInfo';
 
 class MessagesClient {
     protected httpClient: HttpClient;
@@ -29,15 +30,15 @@ class MessagesClient {
     }
 
     uploadAudio(audioPath: string, conversation_id: number) {
-        const name = uuid.v4() + Recorder.extension;
+        const name = uuidv4() + Recorder.extension;
 
-        const file: UploadFileItem = {
-            name,
+        const file: FileInfo = {
             filename: name,
-            filepath: audioPath,
+            path: audioPath,
             filetype: Recorder.formatType,
         };
-        return this.httpClient.upload('messages', file, { conversation_id })
+
+        return this.httpClient.upload('messages/audio-upload', file, { conversation_id })
             .then(response => response.body);
     }
 }

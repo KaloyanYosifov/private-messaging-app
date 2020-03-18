@@ -66,7 +66,7 @@ class Recorder {
     }
 
     get formatType() {
-        return 'audio/acc';
+        return 'audio/aac';
     }
 
     protected finished(path: string) {

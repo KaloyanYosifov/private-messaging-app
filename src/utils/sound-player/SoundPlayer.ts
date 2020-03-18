@@ -3,14 +3,11 @@
  */
 import Sound from 'react-native-sound';
 
-/**
- * Internal dependencies.
- */
-
 class SoundPlayer {
-    player: Sound | null = null;
-    time: number = 0;
-    intervalId: number = -1;
+    protected player: Sound | null = null;
+    protected time: number = 0;
+    protected intervalId: number = -1;
+    protected timeChangeSubscriptions: Array<(seconds: number) => void> = [];
 
     play(path: string): Promise<any> {
         this.destroy();
@@ -38,6 +35,10 @@ class SoundPlayer {
 
                     this.player.getCurrentTime((seconds: number) => {
                         this.time = seconds;
+
+                        for (const callback of this.timeChangeSubscriptions) {
+                            callback(seconds);
+                        }
                     });
                 }, 1000);
             });
@@ -81,6 +82,10 @@ class SoundPlayer {
             playerStoppedPromise,
             timedOutPromise,
         ]);
+    }
+
+    subscribeToTimeChange(callback: (seconds: number) => void) {
+        this.timeChangeSubscriptions.push(callback);
     }
 
     destroy() {

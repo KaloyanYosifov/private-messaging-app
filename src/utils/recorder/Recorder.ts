@@ -9,7 +9,7 @@ import { AudioRecorder, AudioUtils } from 'react-native-audio';
 import { RecorderFinishedData } from '@/utils/recorder/interfaces/RecorderFinishedData';
 
 class Recorder {
-    recording: boolean = false;
+    protected recording: boolean = false;
 
     record(name: string): Promise<RecorderFinishedData> {
         const path = `${AudioUtils.DocumentDirectoryPath}/${name}.aac`;
@@ -46,6 +46,10 @@ class Recorder {
         this.recording = false;
 
         return await AudioRecorder.stopRecording();
+    }
+
+    isRecording() {
+        return this.recording;
     }
 }
 

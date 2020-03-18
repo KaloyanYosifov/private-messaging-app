@@ -2,8 +2,6 @@
  * External dependencies.
  */
 import React, { useCallback } from 'react';
-import { AudioRecorder, AudioUtils } from 'react-native-audio';
-import Sound from 'react-native-sound';
 import { TouchableOpacity, View } from 'react-native';
 import { Icon, withStyles } from '@ui-kitten/components';
 
@@ -11,48 +9,23 @@ import { Icon, withStyles } from '@ui-kitten/components';
  * Internal dependencies.
  */
 import styles from './styles';
+import Recorder from '@/utils/recorder/Recorder';
+import SoundPlayer from '@/utils/sound-player/SoundPlayer';
 
-Sound.setCategory('Playback');
-
-const path = AudioUtils.DocumentDirectoryPath + '/testing.aac';
+const soundPlayer = new SoundPlayer();
 
 const Actions = ({ themedStyle }): React.FunctionComponent => {
-    const onPress = useCallback(async () => {
-        try {
-            await AudioRecorder.requestAuthorization();
+    const onPress = useCallback(() => {
+        if (Recorder.isRecording()) {
+            void Recorder.stop();
 
-            AudioRecorder.prepareRecordingAtPath(path, {
-                SampleRate: 22050,
-                Channels: 1,
-                AudioQuality: 'Low',
-                AudioEncoding: 'aac',
-            });
-
-            AudioRecorder.onFinished = (d) => {
-                var whoosh = new Sound(d.audioFileURL, '', (error) => {
-                    if (error) {
-                        console.log('failed to load the sound', error);
-                        return;
-                    }
-
-                    whoosh.play(success => {
-                        console.log(success);
-                    });
-
-                });
-                console.log(d);
-            };
-
-            const filePath = await AudioRecorder.startRecording();
-
-            setTimeout(async () => {
-                const res = await AudioRecorder.stopRecording();
-
-                console.log(res, filePath);
-            }, 4000);
-        } catch (error) {
-            console.log(error);
+            return;
         }
+
+        Recorder.record('my-space')
+            .then((data) => {
+                void soundPlayer.play(data.audioFileURL);
+            });
     }, []);
 
     return (

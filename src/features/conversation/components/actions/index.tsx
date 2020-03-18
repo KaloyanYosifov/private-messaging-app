@@ -14,7 +14,7 @@ import SoundPlayer from '@/utils/sound-player/SoundPlayer';
 
 const soundPlayer = new SoundPlayer();
 
-const Actions = ({ themedStyle }): React.FunctionComponent => {
+const Actions = ({ themedStyle, onSend }): React.FunctionComponent => {
     useEffect(() => {
         const onFinish = (path: string) => {
             void soundPlayer.play(path);

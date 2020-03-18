@@ -50,7 +50,7 @@ const Conversation = ({ route, getUserData }: ConversationProps): React.ReactFra
         if (chatRef.current && canScroll) {
             setTimeout(() => {
                 chatRef.current.scrollToBottom();
-            }, 50);
+            }, 100);
         }
     }, [canScroll, chatRef.current, setMessages]);
     const [typing, onTextChange] = useMessagingSocket(`conversation.message.created.${conversationId}`, getUserData.id, onReceivedMessage);

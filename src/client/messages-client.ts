@@ -30,7 +30,7 @@ class MessagesClient {
     }
 
     uploadAudio(audioPath: string, conversation_id: number) {
-        const name = uuidv4() + Recorder.extension;
+        const name = uuidv4() + '.' + Recorder.extension;
 
         const file: FileInfo = {
             filename: name,
@@ -38,8 +38,8 @@ class MessagesClient {
             filetype: Recorder.formatType,
         };
 
-        return this.httpClient.upload('messages/audio-upload', file, { conversation_id })
-            .then(response => response.body);
+        return this.httpClient.upload('messages', file, { conversation_id })
+            .then(response => response);
     }
 }
 

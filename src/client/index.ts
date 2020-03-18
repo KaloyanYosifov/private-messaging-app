@@ -73,7 +73,12 @@ class HttpClient {
     upload(endpoint: string, file: FileInfo, data: any = {}) {
         const filePath = file.path.replace(/file:\/\/\//, '');
 
-        let headers: { 'Content-Type': string, Authorization?: string } = {
+        let headers: {
+            Accept: string,
+            'Content-Type': string,
+            Authorization?: string
+        } = {
+            Accept: 'application/json',
             'Content-Type': 'application/octet-stream',
         };
 
@@ -108,9 +113,7 @@ class HttpClient {
             requestData,
         )
             .then(response => {
-                console.log(response);
-
-                return response;
+                return JSON.parse(response.data);
             });
     }
 

@@ -1,16 +1,14 @@
 /**
  * External dependencies.
  */
-import uuid from 'uuid-random';
-import React, { useCallback, useEffect } from 'react';
-import { TouchableOpacity, View } from 'react-native';
+import React, { useCallback } from 'react';
+import { TouchableOpacity } from 'react-native';
 import { Icon, withStyles } from '@ui-kitten/components';
-
 /**
  * Internal dependencies.
  */
 import styles from './styles';
-import Recorder from '@/utils/recorder/Recorder';
+import { RecorderState } from '@/utils/recorder/Recorder';
 import { useRecorder } from '@/features/conversation/hooks';
 
 interface ActionProps {
@@ -26,15 +24,28 @@ const Actions = ({ themedStyle, onSend }: ActionProps): React.FunctionComponent 
     const onFinish = (path: string) => {
         onSend({ audio_url: path });
     };
-    const { recorderState, toggleRecorder: onPress } = useRecorder(onFinish);
+    const { recorderState, toggleRecorder } = useRecorder(onFinish);
+    const iconRef = React.createRef();
+    const onPress = useCallback(() => {
+        if (recorderState === RecorderState.RECORDING) {
+            iconRef.current.stopAnimation();
+        } else {
+            iconRef.current.startAnimation();
+        }
+
+        void toggleRecorder();
+    }, [iconRef]);
 
     return (
         <TouchableOpacity style={styles.container} onPress={onPress}>
             <Icon
-                name="mic-outline"
+                ref={iconRef}
+                name={recorderState === RecorderState.RECORDING ? 'pause-circle-outline' : 'mic-outline'}
                 width={32}
                 height={32}
                 fill={themedStyle.icon.color}
+                animation="pulse"
+                animationConfig={{ cycles: Infinity }}
             />
         </TouchableOpacity>
     );

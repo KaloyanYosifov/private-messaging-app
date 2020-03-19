@@ -1,7 +1,7 @@
 /**
  * External dependencies.
  */
-import { v4 as uuidv4 } from 'uuid';
+import uuid from 'uuid-random';
 /**
  * Internal dependencies.
  */
@@ -28,7 +28,7 @@ class MessagesClient {
     }
 
     uploadAudio(audioPath: string, conversation_id: number) {
-        const name = uuidv4() + '.' + Recorder.extension;
+        const name = uuid() + '.' + Recorder.extension;
 
         const file: FileInfo = {
             filename: name,

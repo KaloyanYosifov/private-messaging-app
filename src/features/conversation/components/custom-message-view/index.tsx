@@ -3,7 +3,7 @@
  */
 import React from 'react';
 import { Icon, Text } from '@ui-kitten/components';
-import { TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, TouchableOpacity, View } from 'react-native';
 /**
  * Internal dependencies.
  */
@@ -38,15 +38,19 @@ const CustomMessageView = ({ currentMessage = { audio_url: null }, position }: C
     }
 
     const {
+        loading,
         duration,
         playerState,
         timePlaying,
         togglePlayer: onPress,
     } = useSoundPlayer(currentMessage.audio_url);
     const isIdle = playerState === PlayerState.IDLE;
+    const renderAudioComponent = () => {
+        if (loading) {
+            return <ActivityIndicator color={textStyles[position].textColor.color} />;
+        }
 
-    return (
-        <View style={styles.container}>
+        return (
             <TouchableOpacity
                 style={styles.buttonContainer}
                 onPress={onPress}
@@ -64,6 +68,12 @@ const CustomMessageView = ({ currentMessage = { audio_url: null }, position }: C
                     }
                 </Text>
             </TouchableOpacity>
+        );
+    };
+
+    return (
+        <View style={styles.container}>
+            {renderAudioComponent()}
         </View>
     );
 };

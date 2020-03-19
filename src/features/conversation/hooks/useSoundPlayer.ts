@@ -10,6 +10,7 @@ import SoundPlayer, { PlayerState } from '@/utils/sound-player/SoundPlayer';
 
 const useSoundPlayer = (audioUrl: string) => {
     const soundPlayerRef = useRef<SoundPlayer | null>(null);
+    const [loading, setLoading] = useState(true);
     const [duration, setDuration] = useState(0);
     const [timePlaying, setTimePlaying] = useState(0);
     const [playerState, setPlayerState] = useState(PlayerState.IDLE);
@@ -35,6 +36,7 @@ const useSoundPlayer = (audioUrl: string) => {
         soundPlayerRef.current = player;
         const onLoad = () => {
             setDuration(player.getDuration());
+            setLoading(false);
 
             player.onLoadObservable.unsubscribe(onLoad);
         };
@@ -56,6 +58,7 @@ const useSoundPlayer = (audioUrl: string) => {
 
     return {
         duration,
+        loading,
         timePlaying,
         togglePlayer,
         playerState,

@@ -9,6 +9,7 @@ export interface MessageData {
     user: UserData,
     conversation_id: number,
     text: string,
+    audio_url: string | null
     read_at: string | null,
     created_at: string,
     updated_at: string | null,

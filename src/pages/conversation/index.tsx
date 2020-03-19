@@ -20,6 +20,7 @@ import TypingIndicator from '@/components/typing-indicator';
 import { MessageData } from '@/interfaces/messaging/MessageData';
 import { convertMessagesToIMessages } from '@/pages/conversation/utils';
 import InputToolbar from '@/features/conversation/components/input-toolbar';
+import CustomMessageView from '@/features/conversation/components/custom-message-view';
 
 interface ConversationProps {
     route: any,
@@ -116,6 +117,7 @@ const Conversation = ({ route, getUserData }: ConversationProps): React.ReactFra
                                 renderLoading={renderLoading}
                                 onInputTextChanged={onTextChange}
                                 renderChatFooter={() => (<TypingIndicator isTyping={typing} />)}
+                                renderCustomView={(props) => <CustomMessageView {...props} />}
                                 renderInputToolbar={(props) => <InputToolbar {...props} />}
                                 user={{
                                     _id: getUserData.id,

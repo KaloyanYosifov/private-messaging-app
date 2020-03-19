@@ -11,6 +11,7 @@ import { Icon, withStyles } from '@ui-kitten/components';
  */
 import styles from './styles';
 import Recorder from '@/utils/recorder/Recorder';
+import { useRecorder } from '@/features/conversation/hooks';
 
 interface ActionProps {
     themedStyle: {
@@ -22,27 +23,10 @@ interface ActionProps {
 }
 
 const Actions = ({ themedStyle, onSend }: ActionProps): React.FunctionComponent => {
-    useEffect(() => {
-        const onFinish = (path: string) => {
-            onSend({ audio_url: path });
-        };
-
-        Recorder.addOnFinishedCallback(onFinish);
-
-        return () => {
-            Recorder.removeOnFinishedCallback(onFinish);
-        };
-    }, []);
-
-    const onPress = useCallback(async () => {
-        if (Recorder.isRecording()) {
-            await Recorder.stop();
-
-            return;
-        }
-
-        await Recorder.record(uuid());
-    }, []);
+    const onFinish = (path: string) => {
+        onSend({ audio_url: path });
+    };
+    const { recorderState, toggleRecorder: onPress } = useRecorder(onFinish);
 
     return (
         <TouchableOpacity style={styles.container} onPress={onPress}>

@@ -2,7 +2,7 @@
  * External dependencies.
  */
 import React from 'react';
-import { Text } from '@ui-kitten/components';
+import { Icon, Text } from '@ui-kitten/components';
 import { TouchableOpacity, View } from 'react-native';
 /**
  * Internal dependencies.
@@ -21,12 +21,12 @@ interface CustomMessageViewProps {
 
 const textStyles = {
     left: {
-        text: {
+        textColor: {
             color: '#000',
         },
     },
     right: {
-        text: {
+        textColor: {
             color: '#fff',
         },
     },
@@ -43,11 +43,25 @@ const CustomMessageView = ({ currentMessage = { audio_url: null }, position }: C
         timePlaying,
         togglePlayer: onPress,
     } = useSoundPlayer(currentMessage.audio_url);
+    const isIdle = playerState === PlayerState.IDLE;
 
     return (
         <View style={styles.container}>
-            <TouchableOpacity onPress={onPress}>
-                <Text style={textStyles[position].text}>{formatTimeForAPlayer(playerState !== PlayerState.IDLE ? timePlaying : duration)}</Text>
+            <TouchableOpacity
+                style={styles.buttonContainer}
+                onPress={onPress}
+            >
+                <Icon
+                    name={isIdle ? 'play-circle-outline' : 'pause-circle-outline'}
+                    width={16}
+                    height={16}
+                    fill={textStyles[position].textColor}
+                />
+                <Text style={textStyles[position].textColor}>
+                    {
+                        formatTimeForAPlayer(isIdle ? duration : timePlaying)
+                    }
+                </Text>
             </TouchableOpacity>
         </View>
     );

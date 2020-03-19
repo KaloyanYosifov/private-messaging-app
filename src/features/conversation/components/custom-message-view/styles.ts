@@ -9,4 +9,7 @@ export default StyleSheet.create({
         paddingVertical: verticalScale(3),
         paddingHorizontal: scale(10),
     },
+    buttonContainer: {
+        flexDirection: 'row',
+    },
 });

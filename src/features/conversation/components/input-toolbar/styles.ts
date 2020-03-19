@@ -2,12 +2,11 @@
  * External dependencies.
  */
 import { StyleSheet } from 'react-native';
-import { verticalScale } from 'react-native-size-matters';
 
 export default StyleSheet.create({
     container: {
         borderTopWidth: StyleSheet.hairlineWidth,
-        bottom: 0,
+        bottom: -2,
         left: 0,
         right: 0,
     },
@@ -18,8 +17,5 @@ export default StyleSheet.create({
     primary: {
         flexDirection: 'row',
         alignItems: 'flex-end',
-    },
-    accessory: {
-        height: verticalScale(44),
     },
 });

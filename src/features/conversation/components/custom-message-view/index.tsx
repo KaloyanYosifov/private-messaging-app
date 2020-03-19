@@ -15,10 +15,24 @@ import { PlayerState } from '@/utils/sound-player/SoundPlayer';
 interface CustomMessageViewProps {
     currentMessage: {
         audio_url: string
-    }
+    },
+    position: 'right' | 'left'
 }
 
-const CustomMessageView = ({ currentMessage = { audio_url: null } }: CustomMessageViewProps): React.FunctionComponent => {
+const textStyles = {
+    left: {
+        text: {
+            color: '#000',
+        },
+    },
+    right: {
+        text: {
+            color: '#fff',
+        },
+    },
+};
+
+const CustomMessageView = ({ currentMessage = { audio_url: null }, position }: CustomMessageViewProps): React.FunctionComponent => {
     if (!currentMessage.audio_url) {
         return <></>;
     }
@@ -33,7 +47,7 @@ const CustomMessageView = ({ currentMessage = { audio_url: null } }: CustomMessa
     return (
         <View style={styles.container}>
             <TouchableOpacity onPress={onPress}>
-                <Text>{formatTimeForAPlayer(playerState !== PlayerState.IDLE ? timePlaying : duration)}</Text>
+                <Text style={textStyles[position].text}>{formatTimeForAPlayer(playerState !== PlayerState.IDLE ? timePlaying : duration)}</Text>
             </TouchableOpacity>
         </View>
     );

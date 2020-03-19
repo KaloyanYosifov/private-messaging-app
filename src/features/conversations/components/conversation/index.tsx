@@ -23,7 +23,13 @@ const Conversation = ({ conversation }: ConversationProps): ReactFragment => {
 
     if (conversation.last_message) {
         const { last_message: lastMessage } = conversation;
-        description = `${lastMessage.text} - ${formatDistance(new Date(lastMessage.created_at), new Date())}`;
+        description = `- ${formatDistance(new Date(lastMessage.created_at), new Date())}`;
+
+        if (!lastMessage.text && lastMessage.audio_url) {
+            description = 'audio ' + description;
+        } else {
+            description = lastMessage.text + ' ' + description;
+        }
     } else {
         description = 'New message';
     }

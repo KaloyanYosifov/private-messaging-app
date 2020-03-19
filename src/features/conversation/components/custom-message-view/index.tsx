@@ -7,6 +7,7 @@ import { TouchableOpacity, View } from 'react-native';
 /**
  * Internal dependencies.
  */
+import styles from './styles';
 import { formatTimeForAPlayer } from '@/helpers';
 import { useSoundPlayer } from '@/features/conversation/hooks';
 import { PlayerState } from '@/utils/sound-player/SoundPlayer';
@@ -30,7 +31,7 @@ const CustomMessageView = ({ currentMessage = { audio_url: null } }: CustomMessa
     } = useSoundPlayer(currentMessage.audio_url);
 
     return (
-        <View>
+        <View style={styles.container}>
             <TouchableOpacity onPress={onPress}>
                 <Text>{formatTimeForAPlayer(playerState !== PlayerState.IDLE ? timePlaying : duration)}</Text>
             </TouchableOpacity>

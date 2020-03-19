@@ -36,7 +36,7 @@ class MessagesClient {
             filetype: Recorder.formatType,
         };
 
-        return this.httpClient.upload('messages', file, { conversation_id })
+        return this.httpClient.upload('messages', file, { conversation_id: conversation_id.toString() })
             .then(response => response);
     }
 }

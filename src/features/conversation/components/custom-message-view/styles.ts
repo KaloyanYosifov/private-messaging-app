@@ -11,5 +11,9 @@ export default StyleSheet.create({
     },
     buttonContainer: {
         flexDirection: 'row',
+        alignItems: 'center',
     },
+    icon: {
+        marginRight: verticalScale(5)
+    }
 });

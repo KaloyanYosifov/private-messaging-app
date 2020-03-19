@@ -53,9 +53,10 @@ const CustomMessageView = ({ currentMessage = { audio_url: null }, position }: C
             >
                 <Icon
                     name={isIdle ? 'play-circle-outline' : 'pause-circle-outline'}
+                    style={styles.icon}
                     width={16}
                     height={16}
-                    fill={textStyles[position].textColor}
+                    fill={textStyles[position].textColor.color}
                 />
                 <Text style={textStyles[position].textColor}>
                     {

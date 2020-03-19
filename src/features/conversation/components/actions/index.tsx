@@ -10,9 +10,6 @@ import { Icon, withStyles } from '@ui-kitten/components';
  */
 import styles from './styles';
 import Recorder from '@/utils/recorder/Recorder';
-import SoundPlayer from '@/utils/sound-player/SoundPlayer';
-
-const soundPlayer = new SoundPlayer();
 
 interface ActionProps {
     themedStyle: {
@@ -26,7 +23,6 @@ interface ActionProps {
 const Actions = ({ themedStyle, onSend }: ActionProps): React.FunctionComponent => {
     useEffect(() => {
         const onFinish = (path: string) => {
-            void soundPlayer.play(path);
             onSend({ audio_url: path });
         };
 

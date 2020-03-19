@@ -1,6 +1,7 @@
 /**
  * External dependencies.
  */
+import { v4 as uuidv4 } from 'uuid';
 import React, { useCallback, useEffect } from 'react';
 import { TouchableOpacity, View } from 'react-native';
 import { Icon, withStyles } from '@ui-kitten/components';
@@ -40,7 +41,7 @@ const Actions = ({ themedStyle, onSend }: ActionProps): React.FunctionComponent 
             return;
         }
 
-        await Recorder.record('my-space');
+        await Recorder.record(uuidv4());
     }, []);
 
     return (

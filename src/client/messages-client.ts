@@ -1,9 +1,7 @@
 /**
  * External dependencies.
  */
-import { UploadFileItem } from 'react-native-fs';
 import { v4 as uuidv4 } from 'uuid';
-
 /**
  * Internal dependencies.
  */

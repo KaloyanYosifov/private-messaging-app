@@ -2,15 +2,24 @@
  * External dependencies.
  */
 import Sound from 'react-native-sound';
+import Observable from '@/utils/Observable';
+import ImmutableObservable from '@/utils/ImmutableObservable';
+
+export enum PlayerState {
+    PLAYING,
+    PAUSED,
+    IDLE
+}
 
 class SoundPlayer {
     protected player: Sound | null = null;
     protected time: number = 0;
     protected intervalId: number = -1;
-    protected onLoadSubscription: Array<() => void> = [];
-    protected onEndSubscriptions: Array<(success: boolean) => void> = [];
-    protected timeChangeSubscriptions: Array<(seconds: number) => void> = [];
-    protected playing: boolean = false;
+    protected loadObservable: Observable<never> = new Observable<never>();
+    protected endObservable: Observable<boolean> = new Observable<boolean>();
+    protected timeChangeObservable: Observable<number> = new Observable<number>();
+    protected playerStateChangeObservable: Observable<PlayerState> = new Observable<number>();
+    protected playerState: PlayerState = PlayerState.IDLE;
     protected duration: number = 0;
 
     constructor(path: string) {
@@ -22,9 +31,9 @@ class SoundPlayer {
 
             this.duration = this.player.getDuration();
 
-            for (const onLoadCallback of this.onLoadSubscription) {
-                onLoadCallback();
-            }
+            this.loadObservable.trigger();
+
+            this.triggerTimeChange(this.time);
         });
     }
 
@@ -33,19 +42,19 @@ class SoundPlayer {
             return Promise.reject();
         }
 
-        if (this.playing) {
+        if (this.isPlaying) {
             await this.stop();
         }
 
         this.player.play((success) => {
-            for (const onEndCallback of this.onEndSubscriptions) {
-                onEndCallback(success);
-            }
+            this.endObservable.trigger(success);
+
+            this.stop();
         });
 
-        this.startTimeChange();
+        this.startTimeTracking();
 
-        this.playing = true;
+        this.changeState(PlayerState.PLAYING);
     }
 
     pause() {
@@ -55,7 +64,9 @@ class SoundPlayer {
 
         this.player.pause();
 
-        this.playing = false;
+        this.stopTimeTracking();
+
+        this.changeState(PlayerState.PAUSED);
     }
 
     resume() {
@@ -73,7 +84,13 @@ class SoundPlayer {
 
         const playerStoppedPromise = new Promise(resolve => {
             this.player && this.player.stop(() => {
-                this.playing = false;
+                this.stopTimeTracking();
+
+                this.changeState(PlayerState.IDLE);
+                this.time = 0;
+
+                this.triggerTimeChange(this.time);
+
                 resolve();
             });
         });
@@ -90,36 +107,28 @@ class SoundPlayer {
         ]);
     }
 
-    subscribeToTimeChange(callback: (seconds: number) => void) {
-        this.timeChangeSubscriptions.push(callback);
+    get onTimeChangeObservable() {
+        return new ImmutableObservable<number>(this.timeChangeObservable);
     }
 
-    subscribeToOnEnd(callback: (success: boolean) => void) {
-        this.onEndSubscriptions.push(callback);
+    get onLoadObservable() {
+        return new ImmutableObservable<never>(this.loadObservable);
     }
 
-    subscribeToOnLoad(callback: () => void) {
-        this.onLoadSubscription.push(callback);
+    get onEndObservable() {
+        return new ImmutableObservable<boolean>(this.endObservable);
     }
 
-    unsubscribeToTimeChange(callback: (seconds: number) => void) {
-        this.timeChangeSubscriptions = this.timeChangeSubscriptions.filter(subscription => subscription !== callback);
+    get onPlayerStateChangeObservable() {
+        return new ImmutableObservable<PlayerState>(this.playerStateChangeObservable);
     }
 
-    unsubscribeToOnEnd(callback: (success: boolean) => void) {
-        this.onEndSubscriptions = this.onEndSubscriptions.filter(subscription => subscription !== callback);
-    }
-
-    unsubscribeToOnLoad(callback: () => void) {
-        this.onLoadSubscription = this.onLoadSubscription.filter(subscription => subscription !== callback);
+    get isPlaying() {
+        return this.playerState === PlayerState.PLAYING;
     }
 
     getDuration() {
         return Math.ceil(this.duration);
-    }
-
-    get isPlaying() {
-        return this.playing;
     }
 
     destroy() {
@@ -128,42 +137,38 @@ class SoundPlayer {
         }
 
         this.player.release();
-        this.stopTimeChange();
+        this.stopTimeTracking();
 
         this.time = 0;
         this.player = null;
-        this.onEndSubscriptions = [];
-        this.timeChangeSubscriptions = [];
+        this.endObservable.destroy();
+        this.loadObservable.destroy();
+        this.timeChangeObservable.destroy();
+        this.playerStateChangeObservable.destroy();
     }
 
-    protected triggerTimeChange(seconds: number) {
-        for (const timeChangeCallback of this.timeChangeSubscriptions) {
-            timeChangeCallback(seconds);
-        }
+    protected changeState(state: PlayerState) {
+        this.playerState = state;
+
+        this.playerStateChangeObservable.trigger(this.playerState);
     }
 
-    protected startTimeChange() {
-        this.stopTimeChange();
-
-        if (!this.player) {
-            return;
-        }
-
-        this.intervalId = setInterval(() => {
-            if (!this.player) {
-                return;
-            }
-
-            this.player.getCurrentTime((seconds) => {
-                this.triggerTimeChange(seconds);
-            });
-        });
-    }
-
-    protected stopTimeChange() {
+    protected stopTimeTracking() {
         clearInterval(this.intervalId);
 
         this.intervalId = -1;
+    }
+
+    protected startTimeTracking() {
+        this.intervalId = setInterval(() => {
+            this.time++;
+
+            this.triggerTimeChange(this.time);
+        }, 1000);
+    }
+
+    protected triggerTimeChange(seconds: number) {
+        this.timeChangeObservable.trigger(seconds);
     }
 }
 

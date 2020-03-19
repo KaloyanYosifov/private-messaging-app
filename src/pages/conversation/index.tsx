@@ -33,7 +33,7 @@ const renderLoading = () => (
 const messageClient = new MessagesClient();
 
 interface EnhancedIMessage extends IMessage {
-    audioPath: string
+    audio_url: string
 }
 
 const Conversation = ({ route, getUserData }: ConversationProps): React.ReactFragment => {
@@ -63,8 +63,8 @@ const Conversation = ({ route, getUserData }: ConversationProps): React.ReactFra
         setMessages((previousMessages) => GiftedChat.prepend(previousMessages, newMessages));
         setTimeout(() => { scrollToBottom(); }, 100);
 
-        if (newMessages[0].audioPath) {
-            void messageClient.uploadAudio(newMessages[0].audioPath, conversationId);
+        if (newMessages[0].audio_url) {
+            void messageClient.uploadAudio(newMessages[0].audio_url, conversationId);
         }
 
         if (newMessages[0].text) {

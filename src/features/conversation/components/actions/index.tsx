@@ -27,7 +27,7 @@ const Actions = ({ themedStyle, onSend }: ActionProps): React.FunctionComponent 
     useEffect(() => {
         const onFinish = (path: string) => {
             void soundPlayer.play(path);
-            onSend({ audioPath: path });
+            onSend({ audio_url: path });
         };
 
         Recorder.addOnFinishedCallback(onFinish);

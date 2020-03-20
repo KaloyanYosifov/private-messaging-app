@@ -11,10 +11,11 @@ import styles from './styles';
 import { formatTimeForAPlayer } from '@/helpers';
 import { useSoundPlayer } from '@/features/conversation/hooks';
 import { PlayerState } from '@/utils/sound-player/SoundPlayer';
+import { AttachmentData } from '@/interfaces/messaging/AttachmentData';
 
 interface CustomMessageViewProps {
     currentMessage: {
-        audio_url: string
+        attachment: AttachmentData
     },
     position: 'right' | 'left'
 }
@@ -32,8 +33,8 @@ const textStyles = {
     },
 };
 
-const CustomMessageView = ({ currentMessage = { audio_url: null }, position }: CustomMessageViewProps): React.FunctionComponent => {
-    if (!currentMessage.audio_url) {
+const CustomMessageView = ({ currentMessage = { attachment: null }, position }: CustomMessageViewProps): React.FunctionComponent => {
+    if (!currentMessage.attachment) {
         return <></>;
     }
 
@@ -43,7 +44,7 @@ const CustomMessageView = ({ currentMessage = { audio_url: null }, position }: C
         playerState,
         timePlaying,
         togglePlayer: onPress,
-    } = useSoundPlayer(currentMessage.audio_url);
+    } = useSoundPlayer(currentMessage.attachment.url);
     const isIdle = playerState === PlayerState.IDLE;
     const renderAudioComponent = () => {
         if (loading) {

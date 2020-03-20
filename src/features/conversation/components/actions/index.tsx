@@ -22,7 +22,7 @@ interface ActionProps {
 
 const Actions = ({ themedStyle, onSend }: ActionProps): React.FunctionComponent => {
     const onFinish = (path: string) => {
-        onSend({ audio_url: path });
+        onSend({ attachment: { url: path } });
     };
     const { recorderState, toggleRecorder } = useRecorder(onFinish);
     const iconRef = React.createRef();

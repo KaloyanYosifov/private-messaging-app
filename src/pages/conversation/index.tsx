@@ -21,6 +21,7 @@ import { MessageData } from '@/interfaces/messaging/MessageData';
 import { convertMessagesToIMessages } from '@/pages/conversation/utils';
 import InputToolbar from '@/features/conversation/components/input-toolbar';
 import CustomMessageView from '@/features/conversation/components/custom-message-view';
+import { AttachmentData } from '@/interfaces/messaging/AttachmentData';
 
 interface ConversationProps {
     route: any,
@@ -34,7 +35,7 @@ const renderLoading = () => (
 const messageClient = new MessagesClient();
 
 interface EnhancedIMessage extends IMessage {
-    audio_url: string
+    attachment: AttachmentData | null
 }
 
 const Conversation = ({ route, getUserData }: ConversationProps): React.ReactFragment => {
@@ -64,12 +65,14 @@ const Conversation = ({ route, getUserData }: ConversationProps): React.ReactFra
         setMessages((previousMessages) => GiftedChat.prepend(previousMessages, newMessages));
         setTimeout(() => { scrollToBottom(); }, 100);
 
-        if (newMessages[0].audio_url) {
-            void messageClient.uploadAudio(newMessages[0].audio_url, conversationId);
+        const newMessage = newMessages[0];
+
+        if (newMessage.attachment) {
+            void messageClient.uploadAudio(newMessage.attachment.url, conversationId);
         }
 
-        if (newMessages[0].text) {
-            void messageClient.send(newMessages[0].text, conversationId);
+        if (newMessage.text) {
+            void messageClient.send(newMessage.text, conversationId);
         }
     }, [setMessages]);
 

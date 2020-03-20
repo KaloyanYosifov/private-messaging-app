@@ -25,8 +25,8 @@ const Conversation = ({ conversation }: ConversationProps): ReactFragment => {
         const { last_message: lastMessage } = conversation;
         description = `- ${formatDistance(new Date(lastMessage.created_at), new Date())}`;
 
-        if (!lastMessage.text && lastMessage.audio_url) {
-            description = 'audio ' + description;
+        if (!lastMessage.text && lastMessage.attachment) {
+            description = lastMessage.attachment.type + ' ' + description;
         } else {
             description = lastMessage.text + ' ' + description;
         }

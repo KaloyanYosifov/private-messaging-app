@@ -2,6 +2,7 @@
  * Internal dependencies.
  */
 import { UserData } from '@/interfaces/UserData';
+import { AttachmentData } from '@/interfaces/messaging/AttachmentData';
 
 export interface MessageData {
     id: number,
@@ -9,7 +10,7 @@ export interface MessageData {
     user: UserData,
     conversation_id: number,
     text: string,
-    audio_url: string | null
+    attachment: AttachmentData,
     read_at: string | null,
     created_at: string,
     updated_at: string | null,

@@ -1,13 +1,13 @@
 /**
  * External dependencies.
  */
+import uuid from 'uuid-random';
 import { useCallback, useEffect, useState } from 'react';
 
 /**
  * Internal dependencies.
  */
 import Recorder, { RecorderState } from '@/utils/recorder/Recorder';
-import uuid from 'uuid-random';
 
 const useRecorder = (onFinish: (path: string) => void) => {
     const [recorderState, setRecorderState] = useState(RecorderState.IDLE);

@@ -64,6 +64,13 @@ class SoundPlayer {
 
         this.player.pause();
 
+        // update the current time when we pause
+        this.player.getCurrentTime((seconds) => {
+            this.time = Math.ceil(seconds);
+
+            this.triggerTimeChange(this.time);
+        });
+
         this.stopTimeTracking();
 
         this.changeState(PlayerState.PAUSED);

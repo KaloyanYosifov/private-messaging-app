@@ -17,7 +17,6 @@ const useSoundPlayer = (audioUrl: string, duration?: number) => {
     const [playerState, setPlayerState] = useState(PlayerState.IDLE);
 
     const initPlayer = useCallback(() => {
-        console.log('23rwsd');
         return new Promise(resolve => {
             setInitializing(true);
             setLoading(true);

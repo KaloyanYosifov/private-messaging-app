@@ -1,7 +1,7 @@
 /**
  * External dependencies.
  */
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import { TouchableOpacity } from 'react-native';
 import { Icon, withStyles } from '@ui-kitten/components';
 /**
@@ -10,6 +10,7 @@ import { Icon, withStyles } from '@ui-kitten/components';
 import styles from './styles';
 import { RecorderState } from '@/utils/recorder/Recorder';
 import { useRecorder } from '@/features/conversation/hooks';
+import SoundPlayer from '@/utils/sound-player/SoundPlayer';
 
 interface ActionProps {
     themedStyle: {
@@ -21,12 +22,29 @@ interface ActionProps {
 }
 
 const Actions = ({ themedStyle, onSend }: ActionProps): React.FunctionComponent => {
-    const onFinish = (path: string) => {
-        onSend({ attachment: { url: path } });
-    };
+    const [isPreparingAudio, setIsPreparingAudio] = useState(false);
+    const onFinish = useCallback((path: string) => {
+        setIsPreparingAudio(true);
+
+        const player = new SoundPlayer(path);
+        const onLoad = () => {
+            onSend({ attachment: { url: path, duration_in_seconds: player.getDuration() } });
+
+            player.onLoadObservable.unsubscribe(onLoad);
+            player.destroy();
+
+            setIsPreparingAudio(false);
+        };
+
+        player.onLoadObservable.subscribe(onLoad);
+    }, [onSend]);
     const { recorderState, toggleRecorder } = useRecorder(onFinish);
     const iconRef = React.createRef();
     const onPress = useCallback(() => {
+        if (isPreparingAudio) {
+            return;
+        }
+
         if (recorderState === RecorderState.RECORDING) {
             iconRef.current.stopAnimation();
         } else {
@@ -34,7 +52,7 @@ const Actions = ({ themedStyle, onSend }: ActionProps): React.FunctionComponent 
         }
 
         void toggleRecorder();
-    }, [iconRef]);
+    }, [iconRef, isPreparingAudio]);
 
     return (
         <TouchableOpacity style={styles.container} onPress={onPress}>

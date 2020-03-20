@@ -68,7 +68,7 @@ const Conversation = ({ route, getUserData }: ConversationProps): React.ReactFra
         const newMessage = newMessages[0];
 
         if (newMessage.attachment) {
-            void messageClient.uploadAudio(newMessage.attachment.url, conversationId);
+            void messageClient.uploadAudio(newMessage.attachment.url, newMessage.attachment.duration_in_seconds, conversationId);
         }
 
         if (newMessage.text) {

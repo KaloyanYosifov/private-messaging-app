@@ -46,6 +46,7 @@ const CustomMessageView = ({ currentMessage = { attachment: null }, position }: 
         togglePlayer: onPress,
     } = useSoundPlayer(currentMessage.attachment.url, currentMessage.attachment.duration_in_seconds);
     const isIdle = playerState === PlayerState.IDLE;
+    const isPaused = playerState === PlayerState.PAUSED;
     const renderIcon = () => {
         if (loading) {
             return <ActivityIndicator style={[styles.icon, styles.loader]} color={textStyles[position].textColor.color} />;
@@ -53,7 +54,7 @@ const CustomMessageView = ({ currentMessage = { attachment: null }, position }: 
 
         return (
             <Icon
-                name={isIdle ? 'play-circle-outline' : 'pause-circle-outline'}
+                name={isIdle || isPaused ? 'play-circle-outline' : 'pause-circle-outline'}
                 style={styles.icon}
                 width={16}
                 height={16}

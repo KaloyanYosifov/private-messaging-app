@@ -17,6 +17,7 @@ import { logOut } from '@/store/authentication/actions';
 import { getAuthToken } from '@/store/authentication/getters';
 import { RegistrationData } from './interfaces/RegistrationData';
 import { FileInfo } from '@/client/interfaces/FileInfo';
+import { MessageData } from '@/interfaces/messaging/MessageData';
 
 class HttpClient {
     client: AxiosInstance;
@@ -70,7 +71,7 @@ class HttpClient {
         return this.makeRequest('delete', endpoint, data);
     }
 
-    upload(endpoint: string, file: FileInfo, data: any = {}) {
+    upload(endpoint: string, file: FileInfo, data: any = {}): Promise<MessageData> {
         const filePath = file.path.replace(/file:\/\/\//, '');
 
         let headers: {

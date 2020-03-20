@@ -1,8 +1,8 @@
 /**
  * External dependencies.
  */
-import { useCallback, useEffect, useReducer, useState } from 'react';
-import { GiftedChat, IMessage } from 'react-native-gifted-chat';
+import { useCallback, useEffect, useReducer } from 'react';
+import { GiftedChat } from 'react-native-gifted-chat';
 
 /**
  * Internal dependencies.
@@ -16,9 +16,10 @@ import {
     HAS_MORE_PAGES,
     SET_FIRST_LOADING,
 } from './types';
+import { EnhancedIMessage } from '@/interfaces/messaging/EnhancedIMessage';
 
 interface StateModel {
-    messages: IMessage[],
+    messages: EnhancedIMessage[],
     loading: boolean,
     currentPage: number,
     hasMorePages: boolean,
@@ -74,7 +75,7 @@ const messagesReducer = (state: StateModel, action): any => {
 
 const messagesClient = new MessagesClient();
 
-export const useChatMessages = (conversationId: number, initialMessages: IMessage[] = []) => {
+export const useChatMessages = (conversationId: number, initialMessages: EnhancedIMessage[] = []) => {
     // do not get scared of the error
     // it's a bug in the type system of @types/react
     const [state, dispatch] = useReducer<any>(
@@ -82,7 +83,7 @@ export const useChatMessages = (conversationId: number, initialMessages: IMessag
         { ...initialState, messages: [...initialMessages] },
     );
 
-    const setMessages = useCallback((setter: (messages: IMessage[]) => IMessage[]) => {
+    const setMessages = useCallback((setter: (messages: EnhancedIMessage[]) => EnhancedIMessage[]) => {
         dispatch({
             type: SET_MESSAGES,
             payload: setter(state.messages),

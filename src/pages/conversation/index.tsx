@@ -4,7 +4,7 @@
 import React, { useCallback, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { Layout, Spinner } from '@ui-kitten/components';
-import { GiftedChat, IMessage } from 'react-native-gifted-chat';
+import { GiftedChat } from 'react-native-gifted-chat';
 /**
  * Internal dependencies.
  */
@@ -13,6 +13,7 @@ import styles from './styles';
 import Chat from '@/components/chat';
 import MessagesClient from '@/client/messages-client';
 import { UserData } from '@/interfaces/UserData';
+import FileHandler from '@/utils/FileHandler';
 import { getUserData } from '@/store/authentication/getters';
 import { useChatMessages, useMessagingSocket } from '@/pages/conversation/hooks';
 import TopNavigation from '@/features/conversation/components/top-navigation';
@@ -21,7 +22,7 @@ import { MessageData } from '@/interfaces/messaging/MessageData';
 import { convertMessagesToIMessages } from '@/pages/conversation/utils';
 import InputToolbar from '@/features/conversation/components/input-toolbar';
 import CustomMessageView from '@/features/conversation/components/custom-message-view';
-import { AttachmentData } from '@/interfaces/messaging/AttachmentData';
+import { EnhancedIMessage } from '@/interfaces/messaging/EnhancedIMessage';
 
 interface ConversationProps {
     route: any,
@@ -33,10 +34,6 @@ const renderLoading = () => (
 );
 
 const messageClient = new MessagesClient();
-
-interface EnhancedIMessage extends IMessage {
-    attachment: AttachmentData | null
-}
 
 const Conversation = ({ route, getUserData }: ConversationProps): React.ReactFragment => {
     const userName = route.params.userName;
@@ -62,13 +59,38 @@ const Conversation = ({ route, getUserData }: ConversationProps): React.ReactFra
     const [typing, onTextChange] = useMessagingSocket(`conversation.message.created.${conversationId}`, getUserData.id, onReceivedMessage);
 
     const onSend = useCallback((newMessages: EnhancedIMessage[], scrollToBottom: () => void) => {
-        setMessages((previousMessages) => GiftedChat.prepend(previousMessages, newMessages));
+        // remove the duration of the new messages
+        // as they in the url we hold the local audio file
+        // and if we remove the duration we are going to load the audio file
+        // immediately, and it will stay in memory, so we do not have to worry
+        // if the user can hear the audio if we delete the audio file from local after we
+        // store it in our server
+        const formattedNewMessages: EnhancedIMessage[] = newMessages.map((message) => {
+            if (message.attachment) {
+                return {
+                    ...message,
+                    attachment: {
+                        url: message.attachment.url,
+                    },
+                } as EnhancedIMessage;
+            }
+
+            return message;
+        });
+        setMessages((previousMessages) => GiftedChat.prepend(previousMessages, formattedNewMessages));
         setTimeout(() => { scrollToBottom(); }, 100);
 
         const newMessage = newMessages[0];
 
         if (newMessage.attachment) {
-            void messageClient.uploadAudio(newMessage.attachment.url, newMessage.attachment.duration_in_seconds, conversationId);
+            void messageClient.uploadAudio(newMessage.attachment.url, newMessage.attachment.duration_in_seconds, conversationId)
+                .then(() => {
+                    if (!newMessage.attachment) {
+                        return;
+                    }
+
+                    void FileHandler.delete(newMessage.attachment.url);
+                });
         }
 
         if (newMessage.text) {

@@ -14,6 +14,10 @@ export default StyleSheet.create({
         alignItems: 'center',
     },
     icon: {
-        marginRight: verticalScale(5)
-    }
+        marginRight: verticalScale(5),
+    },
+    loader: {
+        width: 16,
+        height: 16,
+    },
 });

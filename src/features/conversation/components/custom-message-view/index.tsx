@@ -46,35 +46,35 @@ const CustomMessageView = ({ currentMessage = { attachment: null }, position }: 
         togglePlayer: onPress,
     } = useSoundPlayer(currentMessage.attachment.url, currentMessage.attachment.duration_in_seconds);
     const isIdle = playerState === PlayerState.IDLE;
-    const renderAudioComponent = () => {
+    const renderIcon = () => {
         if (loading) {
-            return <ActivityIndicator color={textStyles[position].textColor.color} />;
+            return <ActivityIndicator style={[styles.icon, styles.loader]} color={textStyles[position].textColor.color} />;
         }
 
         return (
+            <Icon
+                name={isIdle ? 'play-circle-outline' : 'pause-circle-outline'}
+                style={styles.icon}
+                width={16}
+                height={16}
+                fill={textStyles[position].textColor.color}
+            />
+        );
+    };
+
+    return (
+        <View style={styles.container}>
             <TouchableOpacity
                 style={styles.buttonContainer}
                 onPress={onPress}
             >
-                <Icon
-                    name={isIdle ? 'play-circle-outline' : 'pause-circle-outline'}
-                    style={styles.icon}
-                    width={16}
-                    height={16}
-                    fill={textStyles[position].textColor.color}
-                />
+                {renderIcon()}
                 <Text style={textStyles[position].textColor}>
                     {
                         formatTimeForAPlayer(isIdle ? duration : timePlaying)
                     }
                 </Text>
             </TouchableOpacity>
-        );
-    };
-
-    return (
-        <View style={styles.container}>
-            {renderAudioComponent()}
         </View>
     );
 };

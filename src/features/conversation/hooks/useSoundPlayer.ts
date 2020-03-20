@@ -8,16 +8,52 @@ import { useCallback, useEffect, useRef, useState } from 'react';
  */
 import SoundPlayer, { PlayerState } from '@/utils/sound-player/SoundPlayer';
 
-const useSoundPlayer = (audioUrl: string) => {
+const useSoundPlayer = (audioUrl: string, duration?: number) => {
     const soundPlayerRef = useRef<SoundPlayer | null>(null);
+    const [initializing, setInitializing] = useState(false);
     const [loading, setLoading] = useState(true);
-    const [duration, setDuration] = useState(0);
+    const [audioFileDuration, setAudioFileDuration] = useState(duration || 0);
     const [timePlaying, setTimePlaying] = useState(0);
     const [playerState, setPlayerState] = useState(PlayerState.IDLE);
 
-    const togglePlayer = useCallback(() => {
-        if (!soundPlayerRef.current) {
+    const initPlayer = useCallback(() => {
+        console.log('23rwsd');
+        return new Promise(resolve => {
+            setInitializing(true);
+            setLoading(true);
+
+            const player = new SoundPlayer(audioUrl);
+            soundPlayerRef.current = player;
+            const onLoad = () => {
+                setAudioFileDuration(player.getDuration());
+                setLoading(false);
+                setInitializing(false);
+
+                player.onLoadObservable.unsubscribe(onLoad);
+
+                resolve();
+            };
+            const onTimeChange = (seconds: number) => {
+                setTimePlaying(seconds);
+            };
+            const onPlayerStateChange = (state: PlayerState) => {
+                setPlayerState(state);
+            };
+
+            player.onLoadObservable.subscribe(onLoad);
+            player.onTimeChangeObservable.subscribe(onTimeChange);
+            player.onPlayerStateChangeObservable.subscribe(onPlayerStateChange);
+        });
+
+    }, []);
+
+    const togglePlayer = useCallback(async () => {
+        if (initializing) {
             return;
+        }
+
+        if (!soundPlayerRef.current) {
+            await initPlayer();
         }
 
         const player = soundPlayerRef.current as SoundPlayer;
@@ -28,36 +64,25 @@ const useSoundPlayer = (audioUrl: string) => {
             return;
         }
 
-        void player.play();
-    }, []);
+        await player.play();
+    }, [initializing, soundPlayerRef]);
 
     useEffect(() => {
-        const player = new SoundPlayer(audioUrl);
-        soundPlayerRef.current = player;
-        const onLoad = () => {
-            setDuration(player.getDuration());
+        if (!duration) {
+            void initPlayer();
+        } else {
             setLoading(false);
-
-            player.onLoadObservable.unsubscribe(onLoad);
-        };
-        const onTimeChange = (seconds: number) => {
-            setTimePlaying(seconds);
-        };
-        const onPlayerStateChange = (state: PlayerState) => {
-            setPlayerState(state);
-        };
-
-        player.onLoadObservable.subscribe(onLoad);
-        player.onTimeChangeObservable.subscribe(onTimeChange);
-        player.onPlayerStateChangeObservable.subscribe(onPlayerStateChange);
+        }
 
         return () => {
-            player.destroy();
+            if (soundPlayerRef.current) {
+                (soundPlayerRef.current as SoundPlayer).destroy();
+            }
         };
     }, []);
 
     return {
-        duration,
+        duration: audioFileDuration,
         loading,
         timePlaying,
         togglePlayer,

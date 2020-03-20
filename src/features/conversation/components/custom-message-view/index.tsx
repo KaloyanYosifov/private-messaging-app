@@ -44,7 +44,7 @@ const CustomMessageView = ({ currentMessage = { attachment: null }, position }: 
         playerState,
         timePlaying,
         togglePlayer: onPress,
-    } = useSoundPlayer(currentMessage.attachment.url);
+    } = useSoundPlayer(currentMessage.attachment.url, currentMessage.attachment.duration_in_seconds);
     const isIdle = playerState === PlayerState.IDLE;
     const renderAudioComponent = () => {
         if (loading) {

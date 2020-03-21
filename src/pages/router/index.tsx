@@ -8,6 +8,7 @@ import { createStackNavigator } from '@react-navigation/stack';
  * Internal dependencies.
  */
 import Dashboard from '@/pages/dashboard';
+import VideoChat from '@/features/video-chat';
 import Conversation from '@/pages/conversation';
 import Conversations from '@/pages/conversations';
 
@@ -17,6 +18,7 @@ const ConversationStack = createStackNavigator();
 const MainRouter = () => (
     <ConversationStack.Navigator headerMode="none" mode="modal">
         <ConversationStack.Screen name="Conversation" component={Conversation} />
+        <ConversationStack.Screen name="VideoChatModal" component={VideoChat} />
     </ConversationStack.Navigator>
 );
 

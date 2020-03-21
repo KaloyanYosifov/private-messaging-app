@@ -55,5 +55,7 @@
 	<false/>
 	<key>NSMicrophoneUsageDescription</key>
     <string>The microphone is required, so we we can record your audio and send it to a user.</string>
+    <key>NSCameraUsageDescription</key>
+    <string>The camera is required, so we can enable the use of a video chat.</string>
 </dict>
 </plist>

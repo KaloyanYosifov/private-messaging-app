@@ -1,7 +1,7 @@
 /**
  * External dependencies.
  */
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { Layout, Spinner } from '@ui-kitten/components';
 import { GiftedChat } from 'react-native-gifted-chat';
@@ -23,6 +23,7 @@ import { convertMessagesToIMessages } from '@/pages/conversation/utils';
 import InputToolbar from '@/features/conversation/components/input-toolbar';
 import CustomMessageView from '@/features/conversation/components/custom-message-view';
 import { EnhancedIMessage } from '@/interfaces/messaging/EnhancedIMessage';
+import { navigation } from '@/router';
 
 interface ConversationProps {
     route: any,
@@ -119,6 +120,12 @@ const Conversation = ({ route, getUserData }: ConversationProps): React.ReactFra
 
     const onContentSizeChange = useCallback((_, height: number) => {
         setListHeight(height);
+    }, []);
+
+    useEffect(() => {
+        setTimeout(() => {
+            navigation().navigate('VideoChatModal');
+        }, 3000);
     }, []);
 
     return (

@@ -35,9 +35,12 @@ const Conversation = ({ conversation }: ConversationProps): ReactFragment => {
     }
 
     const onPress = () => {
-        navigation().navigate('Conversation', {
-            conversationId: conversation.id,
-            userName: user.name,
+        navigation().navigate('ConversationPage', {
+            screen: 'Conversation',
+            params: {
+                conversationId: conversation.id,
+                userName: user.name,
+            },
         });
     };
 

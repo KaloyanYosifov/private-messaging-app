@@ -12,20 +12,20 @@ import Conversation from '@/pages/conversation';
 import Conversations from '@/pages/conversations';
 
 const RootStack = createStackNavigator();
-const MainStack = createStackNavigator();
+const ConversationStack = createStackNavigator();
 
 const MainRouter = () => (
-    <MainStack.Navigator headerMode="none">
-        <MainStack.Screen name="Dashboard" component={Dashboard} />
-        <MainStack.Screen name="Conversation" component={Conversation} />
-        <MainStack.Screen name="Conversations" component={Conversations} />
-    </MainStack.Navigator>
+    <ConversationStack.Navigator headerMode="none" mode="modal">
+        <ConversationStack.Screen name="Conversation" component={Conversation} />
+    </ConversationStack.Navigator>
 );
 
 const Router = () => {
     return (
-        <RootStack.Navigator headerMode="none" mode="modal">
-            <RootStack.Screen name="MainPage" component={MainRouter} />
+        <RootStack.Navigator headerMode="none">
+            <RootStack.Screen name="Dashboard" component={Dashboard} />
+            <RootStack.Screen name="ConversationPage" component={MainRouter} />
+            <RootStack.Screen name="Conversations" component={Conversations} />
         </RootStack.Navigator>
     );
 };

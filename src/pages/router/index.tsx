@@ -11,16 +11,23 @@ import Dashboard from '@/pages/dashboard';
 import Conversation from '@/pages/conversation';
 import Conversations from '@/pages/conversations';
 
-const Stack = createStackNavigator();
+const RootStack = createStackNavigator();
+const MainStack = createStackNavigator();
 
-function Router() {
+const MainRouter = () => (
+    <MainStack.Navigator headerMode="none">
+        <MainStack.Screen name="Dashboard" component={Dashboard} />
+        <MainStack.Screen name="Conversation" component={Conversation} />
+        <MainStack.Screen name="Conversations" component={Conversations} />
+    </MainStack.Navigator>
+);
+
+const Router = () => {
     return (
-        <Stack.Navigator headerMode={'none'}>
-            <Stack.Screen name="Dashboard" component={Dashboard} />
-            <Stack.Screen name="Conversation" component={Conversation} />
-            <Stack.Screen name="Conversations" component={Conversations} />
-        </Stack.Navigator>
+        <RootStack.Navigator headerMode="none" mode="modal">
+            <RootStack.Screen name="MainPage" component={MainRouter} />
+        </RootStack.Navigator>
     );
-}
+};
 
 export default Router;

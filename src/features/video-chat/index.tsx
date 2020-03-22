@@ -3,7 +3,7 @@
  */
 
 import React, { useEffect, useState } from 'react';
-import { Layout } from '@ui-kitten/components';
+import { Layout, Text } from '@ui-kitten/components';
 import { MediaStream, mediaDevices, RTCView } from 'react-native-webrtc';
 
 /**
@@ -15,7 +15,7 @@ const VideoChat = (): React.FunctionComponent => {
     const [streamUrl, setStreamUrl] = useState('');
 
     useEffect(() => {
-        const isFront = true;
+        const isFront = false;
 
         mediaDevices.enumerateDevices().then(sourceInfos => {
             console.log(sourceInfos);
@@ -26,6 +26,7 @@ const VideoChat = (): React.FunctionComponent => {
                     videoSourceId = sourceInfo.deviceId;
                 }
             }
+
             mediaDevices.getUserMedia({
                 audio: true,
                 video: {
@@ -39,7 +40,9 @@ const VideoChat = (): React.FunctionComponent => {
                 },
             })
                 .then(stream => {
+                    console.log(stream, stream.toURL());
                     if (stream instanceof MediaStream) {
+                        console.log('sdf');
                         setStreamUrl(stream.toURL());
                     }
                 })
@@ -54,11 +57,14 @@ const VideoChat = (): React.FunctionComponent => {
             return null;
         }
 
-        return <RTCView streamURL={streamUrl} />;
+        return <RTCView style={styles.view} streamURL={streamUrl} />;
     };
 
     return (
-        <Layout stlye={styles.container}>
+        <Layout style={styles.container}>
+            <Text>
+                Telele
+            </Text>
             {renderVideo()}
         </Layout>
     );
